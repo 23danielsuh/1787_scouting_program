@@ -1,0 +1,381 @@
+,name,team_number,qual_number,taxi,auto_upper_hub,auto_lower_hub,teleop_upper_hub,teleop_lower_hub,climb,defense,written_information,total_auto_points,total_teleop_points,total_points
+0,Giada,379,1,2,1,0,2,0,15,no,No,4,2,21
+1,GK,378,1,2,0,0,0,0,0,unsure,They really didn’t do much shooter seems inaccurate and I think they were having trouble hanging ,0,0,0
+2,Remy,27,1,2,3,0,9,0,15,no,"For a while they did just drive around randomly at end, seemed like intake wasn’t working properly at the end ",12,6,33
+3,Sean,7460,1,2,0,1,2,1,15,no,Their climb took like 500 years (50 seconds) and they had a couple bounce outs in teleop,2,1,18
+4,Daniel Suh,3954,1,2,0,1,0,8,6,no,Looked a little unstable (wobbled around while moving),2,1,9
+5,Truman,4150,1,2,1,0,0,6,0,no,"Only made like 60% from low hub, also looks like they can climb but something wasn't working",4,2,6
+6,Giada Klisovic,120,2,2,1,0,0,4,0,no,No,4,2,6
+7,GK,2641,2,2,0,1,0,0,6,yes,I think their intake stopped working so they moved to defense,2,1,9
+8,Daniel Suh,325,2,2,0,0,6,1,0,no,Had a lot of cycles but had an inaccurate shooter,0,0,0
+9,Truman,4269,2,2,0,0,0,2,10,no,Intake seems very inefficient becuase the ball has to fit in the hole in their bumper,0,0,10
+10,Remy,117,2,2,0,1,0,0,15,unsure,I love u 117 😍 The way they drove was…. maybe tried playing defense for a second but mostly just not doing anything and have a red ball in their intake. Swerve drive but driving weird and indecisive ,2,1,18
+11,Sean,2051,2,2,0,0,3,2,6,no,Turret lets them shoot from far but it isn't super accurate and it takes so long to align that defense could just bump them,0,0,6
+12,Remy,4991,3,0,0,0,0,0,0,yes,"Played defense but suppressed they didn’t tip over, super unstable, then hung out in corner for rest of match😖 ",0,0,0
+13,GK,2614,3,2,2,0,10,0,0,no,I think their intake broke and had a lot of bounce out,8,4,12
+14,Giada Klisovic,4547,3,2,0,0,0,0,0,yes,No,0,0,0
+15,Daniel Suh,302,3,2,2,0,3,3,6,no,Intake was a little shaky,8,4,18
+16,Sean,1511,3,2,1,0,1,6,6,no,Has swerve but other than that kinda baseline all around,4,2,12
+17,Truman,1787,3,2,0,0,6,0,15,no,Didn't shoot during auto??,0,0,15
+18,Giada Klisovic,695,4,2,0,1,0,6,6,no,No,2,1,9
+19,Remy,291,4,2,0,0,0,8,4,no,So shakyyyyy,0,0,4
+20,GK,3504,4,2,0,8,0,12,0,no,Seem very top heavy almost tipped multiple times but not bad offense but only go for lower goal also can cycle quickly ,16,8,24
+21,Truman,6834,4,2,0,0,0,8,4,no,"Only low goal capable, and seemed kinda top heavy not the most agile",0,0,4
+22,Sean,3260,4,2,0,0,3,1,10,no,"To try to avoid bounce outs they have a very shallow shot into the high goal, so when it gets in it's good, but it ended up missing half the time. ",0,0,10
+23,Daniel Suh,4085,4,2,0,1,0,0,6,unsure,"Something seemed wrong, could barely move around. Looked like it was maybe playing defense, but unsuccessful. ",2,1,9
+24,Giada Klisovic,7165,5,0,0,0,0,0,0,yes,Very top heavy,0,0,0
+25,Remy,8027,5,2,0,0,4,0,0,no,Accurate shot but didn’t shoot a lot ,0,0,0
+26,GK,554,5,2,1,0,4,0,15,no,Was having trouble in taking not because it was broken I think they just don’t have the best intake also had quite a few bounce outs,4,2,21
+27,Daniel Suh,4145,5,2,0,0,3,1,0,no,"Got heavily defended, but had a pretty inaccurate shooter either way. ",0,0,0
+28,Bernon,8027,5,2,0,0,4,3,0,no,Lack of control of their swerve and they shoot 1 at a time  turret takes a while to aim ,0,0,0
+29,Truman,3539,5,2,2,0,3,3,6,no,"Looks like pretty fast swerve drive, fell trying to get to traversal ring.  Also shooter looks not very consistent maybe fixable?",8,4,18
+30,Sean,1708,5,0,0,0,2,1,0,no,"So sad, auto was a little turn that didn't even leave the tarmac and they were just struggling in general",0,0,0
+31,Charlie,6032,6,2,0,0,0,0,6,unsure,Something was wrong with their wheels and they couldn’t move all of them. They inched over to the hanger. ,0,0,6
+32,Ben Wei,5492,6,2,0,0,0,0,10,no,their low goal shooter broke and they were very close to a traversal,0,0,10
+33,Bernon,4027,6,2,0,1,0,5,6,no,Bad intake ,2,1,9
+34,Logan Kaplan,2656,6,2,0,0,0,0,6,no,"Robot couldn’t shoot, Tank drive, didn’t defend",0,0,6
+35,Aaron Friedlander,2252,6,2,2,0,4,0,0,unsure,The shooter was inaccurate and the robot seemed a little off ,8,4,12
+36,Anna,4050,6,2,0,2,0,6,0,no,Not a lot of cargo shots ,4,2,6
+37,Anna,5842,7,0,0,0,0,0,0,no,Did nothing/stopped working I think ,0,0,0
+38,Ben Wei,2053,7,2,1,0,0,0,0,no,shooter was very inaccurate and something on their climb broke,4,2,6
+39,Aaron Friedlander,7515,7,2,0,0,0,1,0,unsure,Not very accurate shooter only going into lower and could only seem to Carry 1 ball in its intake.,0,0,0
+40,Charlie,7515,7,0,0,0,0,3,6,no,Shot very slow. Didn’t do much. ,0,0,6
+41,Sarah Friedlander,156,7,2,0,0,4,0,0,no,"Tried to shoot a decent amount but missed, very wobbly, tried to climb mid but missed",0,0,0
+42,Logan Kaplan,4467,7,2,0,0,0,10,6,no,"Missed both autonomous shots, Fast, lower hoop only,  shoots from the hub",0,0,6
+43,Ben Wei,3201,8,2,0,0,0,1,4,no,Their auto broke and their shooter was not very good,0,0,4
+44,Charlie,2641,8,2,0,0,0,5,6,no,Shot slow ,0,0,6
+45,Jared Bernon,7274,8,2,0,0,0,0,0,yes,A top heavy everybot bad defense ,0,0,0
+46,Aaron Friedlander,2641,8,2,0,0,0,5,4,unsure,Pretty good shooter was somewhat accurate limited to the lower hub only ,0,0,4
+47,Anna,5740,8,2,0,0,0,0,0,yes,"They did climb but kept on falling down, like they couldn’t stay raised up",0,0,0
+48,Logan Kaplan,3814,8,2,1,0,4,0,10,no,"Missed 3 shots (1 in auto), Fast shots, decent speed",4,2,16
+49,Charlie,2051,9,2,1,0,3,2,6,no,Great team effort ,4,2,12
+50,Jared Bernon,291,9,2,0,7,0,7,4,no,Passive climb by yeet ,14,7,25
+51,Aaron Friedlander,2051,9,2,1,0,1,0,4,unsure,Was able to shoot into top it took awhile though for the robot to pick up the cargo and shoot it into the hub ,4,2,10
+52,Anna,325,9,2,2,0,7,0,0,unsure,"Great far shot, made a lot of points, swerve drive train ",8,4,12
+53,Ben Wei,378,9,2,0,0,0,8,0,no,"Pretty consistent low goal, didn't have time for low goal",0,0,0
+54,Logan Kaplan,302,9,2,1,0,3,3,6,no,"Missed 60% of shots, Swerve drive(fast), Fast climber ",4,2,12
+55,Charlie,6834,10,2,0,0,0,2,0,no,Slow shooter and needs to be very precise about everything to make the shot. ,0,0,0
+56,Ben Wei,7165,10,2,0,0,0,4,6,no,Really inconsistent low goal,0,0,6
+57,Aaron Friedlander,4269,10,2,1,0,0,1,4,unsure,Limited to lower hub ,4,2,10
+58,Anna,1511,10,2,1,0,4,5,6,no,"Pretty good at shooting cargo, can shoot cargo in the top and bottom hub",4,2,12
+59,Logan Kaplan,1708,10,0,0,0,0,0,0,no,"Missed All of it’s shots, Intake was Jammed, Might of been an unlucky round.",0,0,0
+60,Jared Bernon,6834,10,2,0,1,0,2,0,no,Top heavy and got a cargo stuck in the gap of the everybot leaving them useless for a minute ,2,1,3
+61,Elise,3260,11,2,0,0,2,0,10,no,"Missed a few shots, didn’t move that fast, stood in one position multiple times. ",0,0,10
+62,Ben Wei,554,11,2,2,0,2,2,15,no,Lots of potential but a slow shooter and quite a few missed upper shots,8,4,27
+63,Logan Kaplan,4027,11,2,0,1,0,3,0,no,"Missed 3 shots, Slow, Can only shoot lower hoop",2,1,3
+64,Daniel Roberts,7460,11,2,1,0,3,0,10,no,"Missed 2 shots, climbed off middle",4,2,16
+65,Jared Bernon,3539,11,2,3,0,2,4,10,no,Small hooks on climb but they could be a fast low goal team ,12,6,28
+66,Griffin,6032,11,2,0,0,0,2,4,no,Robot was very slow and inconsistent at getting both balls in low goal,0,0,4
+67,Logan Kaplan,4991,12,2,0,0,0,0,15,yes,"Defensive bot, Missed all shots, Launched cargo at the judges.",0,0,15
+68,Elise,27,12,2,2,0,7,0,6,no,"Pretty good robot, didn’t miss many shots, did good during auto, and fast shots. ",8,4,18
+69,Sean,4991,12,0,0,0,0,0,15,yes,Tall and wiggly,0,0,15
+70,Griffin,117,12,2,0,0,0,0,0,no,"They didn't intake a single ball, but also didn't play defence",0,0,0
+71,Ben Wei,2603,12,2,0,0,2,0,6,no,Got high rung but got lodged onto the mid rung,0,0,6
+72,Tyler Heasley,120,12,2,1,0,0,7,0,no,Floppy intake that can be a bit inconsistent. Focus’s on the bottom hub and doesn’t show too much potential for defense,4,2,6
+73,Daniel Roberts,4547,12,2,0,0,0,0,0,yes,Missed a shot in autonomous and 2 shots on lower goal. Had some penalties. Mainly played defense throughout the match,0,0,0
+74,Tyler Heasley,156,13,0,0,0,0,0,0,unsure,"Technical error, robot didn’t move at all",0,0,0
+75,Sean,5492,13,2,0,0,0,0,15,no,They just kinda stooged the whole time,0,0,15
+76,Griffin,1787,13,2,2,0,12,0,15,no,The hangar zone shot was really helpful,8,4,27
+77,Elise,3954,13,2,0,0,0,4,0,no,Mainly focused on lower hub and had slow shots. ,0,0,0
+78,Ben Wei,144,13,2,2,0,6,0,0,no,got carried by us ngl,8,4,12
+79,Logan Kaplan,5492,13,2,0,0,0,0,15,no,"Missed all shots, did nothing half the match, only climbed",0,0,15
+80,Daniel Roberts,3504,13,2,0,2,0,3,0,no,Made all their shots in autonomous and teleportation. Took long amounts of time to collect shots. ,4,2,6
+81,Sean,379,14,0,0,0,0,0,0,unsure,ABSENT,0,0,0
+82,Logan Kaplan,379,14,0,0,0,0,0,0,unsure,Robot wasn’t there,0,0,0
+83,Ben Wei,4050,14,2,0,2,0,6,0,no,not bad low goal robot,4,2,6
+84,Elise,2614,14,2,2,0,11,0,6,no,Got many shots in the upper hub however took lots of time to climb and only got to second bar.  ,8,4,18
+85,Griffin,7274,14,2,0,0,0,0,0,yes,"good decisionmaking when it came to defence, but tall and wobbly robot, had trouble crossing the electrical wires",0,0,0
+86,Tyler Heasley,7515,14,2,0,1,0,0,0,yes,Tries defense but doesn’t really have the weight or power to be good at it. Could be good at climbing but I couldn’t tell,2,1,3
+87,Daniel Roberts,4085,14,0,0,1,0,0,6,unsure,"Intake must have broken down, didn’t do much",2,1,9
+88,Griffin,2053,15,2,0,0,2,0,4,no,"was very fast, many shots bounced out and they always shot one at a time",0,0,4
+89,Ben Wei,3201,15,0,0,0,0,2,6,no,none,0,0,6
+90,Sean,4150,15,2,0,0,0,1,6,no,:(,0,0,6
+91,Elise,2252,15,2,0,0,0,0,6,yes,"Did nothing in terms of shooting, missed all shots, however played somewhat good defense. ",0,0,6
+92,Logan Kaplan,4150,15,2,0,0,0,0,6,unsure,"Terrible defense, did nothing for half the round, shot at the judges twice",0,0,6
+93,Tyler Heasley,4467,15,2,0,0,0,6,4,unsure,"They have lots of potential in offense. It’s pretty top heavy but has the mass and power to also be a good defense bot, put up some good resistance.",0,0,4
+94,Daniel Roberts,3814,15,2,2,0,2,0,10,no,Missed 2 and made 2. Climed off middle and tried to support their members,8,4,22
+95,Giada Klisovic,5842,16,2,0,0,1,0,6,no,Missed a lot of shots,0,0,6
+96,GK,5740,16,2,1,0,3,0,0,no,Started out strong and looked good but stopped working for some reason also can shoot two balls at the same time,4,2,6
+97,Jared Bernon,4145,16,2,1,0,3,0,4,no,Broke their intake ,4,2,10
+98,Sean,2051,16,2,2,0,3,0,0,no,They shot so many but they all missed or bounced out or got blocked,8,4,12
+99,Truman,291,16,2,0,0,0,4,0,no,Intake seems slow and they missed a lot of low hub shots,0,0,0
+100,Daniel Suh,2656,16,2,0,0,3,0,0,no,"Takes 2-3ish seconds for intake to go down and up, slow cycle time",0,0,0
+101,Griffin,4145,16,2,0,0,3,0,0,no,"Fast and swerve drive, but inconsistent shooting and long cycle time",0,0,0
+102,Remy,325,17,2,1,0,4,2,4,no,"Swerve drive, controlled but half of shots didn’t make it ",4,2,10
+103,Giada Klisovic,378,17,2,1,0,0,4,0,no,No,4,2,6
+104,GK,4991,17,2,0,0,0,3,15,no,Good climb but slow and not very good offense ,0,0,15
+105,Jared Bernon,325,17,2,0,0,4,2,6,no,A lot of bounce outs ,0,0,6
+106,Griffin,2603,17,2,1,0,0,0,15,no,"Started shooting one at a time, every shot was too low from the base",4,2,21
+107,Daniel Suh,6032,17,2,0,1,0,8,4,no,"Slow cycle time, can only shoot lower",2,1,7
+108,Sean,7165,17,2,0,0,0,4,0,no,Bad driver and aim and climb broke,0,0,0
+109,Daniel Suh,4547,18,2,0,0,0,0,0,yes,"Got disabled with 1 min left, not the best at defense",0,0,0
+110,Giada Klisovic,554,18,2,0,0,4,0,15,no,Swerve drive. High bounce out rate,0,0,15
+111,Sean,2641,18,2,0,2,0,6,6,no,Sadge,4,2,12
+112,Griffin,144,17,0,0,0,2,0,6,no,"Fast, had no autonomous",0,0,6
+113,Jared Bernon,3504,18,2,0,2,0,10,4,no,Good low goal dumper,4,2,10
+114,GK,695,18,2,0,3,0,7,0,no,Had hard time finding cargo and was too late on the hang ,6,3,9
+115,nikki,3504,18,2,0,2,0,6,4,no,missed a couple shots and it took a while for them to line up to shoot,4,2,10
+116,Truman,144,18,2,1,0,0,0,6,yes,Intake looked broken they couldn't pick up any balls,4,2,12
+117,Remy,7515,19,2,0,0,0,3,4,yes,Really shaky and kept going on top of other robotics a little ,0,0,4
+118,GK,3954,19,2,0,2,0,4,6,no,Sort of indecisive ,4,2,12
+119,Giada Klisovic,1708,19,0,1,0,0,1,15,unsure,No,4,2,21
+120,Griffin,117,19,2,0,0,0,0,15,yes,"OK defense, have an intake but did not use it ",0,0,15
+121,Daniel Suh,3260,19,2,1,0,2,0,10,no,Stopped moving for 1 minute but then could start moving towards the end when it went for the climb. ,4,2,16
+122,Sean,1511,19,2,2,0,0,10,6,no,Hamburger,8,4,18
+123,nikki,117,19,2,0,0,0,0,15,unsure,they kinda just drove around helplessly the whole time and played kinda defense but the driver was really indecisive. only thing it could do was climb which they did well,0,0,15
+124,GK,27,20,2,3,0,16,0,15,no,Really good and really fast,12,6,33
+125,Giada Klisovic,3539,20,2,2,0,8,0,15,no,No,8,4,27
+126,Remy,4269,20,2,0,0,0,3,6,no,"Level and controlled but small and light compared to other bots, easy for defense bot to block and move them",0,0,6
+127,nikki,3814,20,2,0,0,3,0,0,no,could hold 2 balls but only shot 1 at a time. similar auto to us but not sure if they shot anything,0,0,0
+128,Sean,4050,20,2,0,1,1,8,0,no,Kinda slow and maybe could climb more but was blocked off,2,1,3
+129,griffin,3814,20,2,0,0,6,0,6,no,none,0,0,6
+130,Daniel Suh,156,20,2,0,1,4,0,6,no,"Pretty slow bot, cycle time was slow. ",2,1,9
+131,Remy,5492,21,2,0,0,0,0,15,no,Intake and shooter issues. ,0,0,15
+132,Charlie,5492,21,2,2,0,2,0,15,no,Great team effort. Slow shooter ,8,4,27
+133,Jack,4467,21,0,0,0,0,0,4,yes,"Shooter did not work, they have swerve drive and may be good for defense",0,0,4
+134,Griffin,2656,21,0,0,0,4,0,6,no,Was pretty slow in intake and moving,0,0,6
+135,Aaron Friedlander,8027,21,2,0,0,4,0,10,no,Accurate shooter ,0,0,10
+136,Logan Kaplan,2614,21,2,1,0,6,2,6,no,"Can shoot from 4 different positions, fast shooting, great team effort",4,2,12
+137,Charlie,4027,22,0,0,0,3,0,6,no,Didn’t do much. But tried to score. ,0,0,6
+138,Aaron Friedlander,4085,22,2,0,0,1,0,0,no,Very slow and inaccurate shooter ,0,0,0
+139,Jack,5842,22,2,0,0,0,4,6,no,"Slow intake, tried shooting into upper hub at beginning and completely missed every attempt",0,0,6
+140,Griffin,379,22,2,0,0,4,1,15,no,"It seemed like they could shoot in both goals, but low was inconsistent",0,0,15
+141,Remy,3201,22,0,0,0,0,9,4,no,"Swerve bot, bit unstable ",0,0,4
+142,Logan Kaplan,4145,22,2,1,0,1,0,6,no,"Missed almost all of its shots, Long ranged, Aim isn't precise ",4,2,12
+143,Charlie,5740,23,2,2,0,0,0,0,unsure,Had a ball stuck in their intake then stopped doing anything. ,8,4,12
+144,Griffin,4150,23,2,2,0,0,3,10,no,Takes a very long time to shoot and shoots in low goal ,8,4,22
+145,Logan Kaplan,7460,23,2,2,0,3,1,15,no,"Climbed when 50 seconds left, Missed 2 times, Carried the Alliance",8,4,27
+146,Jack,6834,23,2,0,1,0,4,0,no,The robot looked lost 💀,2,1,3
+147,Aaron Friedlander,2252,23,2,2,0,5,0,0,no,"Can make longshots, acurate shooter",8,4,12
+148,Jared Bernon,1787,23,2,2,0,4,0,15,no,God tier ,8,4,27
+149,Charlie,120,24,2,2,0,0,10,0,no,Great team effort. Kept scoring till the end. ,8,4,12
+150,Jack,3260,24,2,0,0,1,0,0,no,"Stopped moving for most of the game, started moving in endgame but didn't climb fast enough",0,0,0
+151,Aaron Friedlander,2051,24,2,1,0,2,0,0,unsure,Did pretty well ,4,2,6
+152,Logan Kaplan,302,24,2,2,0,1,3,6,no,"Great auto, Slow shooter, Missed 1 shot",8,4,18
+153,Charlie,554,25,2,1,0,6,0,15,no,Great team effort!,4,2,21
+154,Aaron Friedlander,27,25,2,3,0,7,0,15,unsure,"Very quick with shots, accurate shooter ",12,6,33
+155,Anna,2603,25,2,0,0,0,0,15,yes,Their robot is just really heavy so it weighs them down when they climb ,0,0,15
+156,Jack,7165,25,2,0,1,0,2,6,no,"Slow intake, missed majority of shots, very top heavy ",2,1,9
+157,Logan Kaplan,291,25,2,0,2,0,5,0,no,"Can only shoot lower hoop, No hangers",4,2,6
+158,Griffin,2053,14,2,0,0,0,0,0,no,Got disabled halfway through the match,0,0,0
+159,Jared Bernon,4050,25,2,4,0,0,2,0,unsure,I frogot which team to scout but they were a mediocre low goal ,16,8,24
+160,Jack,3504,26,2,0,0,0,2,6,no,"Cannot shoot well, tried multiple times to shoot without any cargo 😬",0,0,6
+161,Logan Kaplan,117,26,2,0,1,0,0,10,yes,"Defensive bot, Didn’t play that well",2,1,13
+162,Elise,4991,26,2,0,0,0,2,0,no,Made several shots in upper hub but didn’t make any in the upper hub. ,0,0,0
+163,griffin,3504,26,2,2,0,7,0,15,no,"very fast, used their swerve effectively with decisive driving.  ",8,4,27
+164,Tyler Heasley,5492,26,2,0,1,1,1,6,no,Capable of at least the mid rung and likely the traversal but they had a fall. Not too much potential for offense but might have the mass for good defense,2,1,9
+165,Daniel Roberts,4991,26,2,0,0,2,2,0,no,"Missed many of their shots, including autonomous.",0,0,0
+166,Elise,3954,27,2,0,0,0,2,6,no,Only made shots in lower hub. ,0,0,6
+167,Jack,7274,27,2,0,0,0,0,0,yes,"Tried playing defense, gets pushed around easily and cannot tell blue from red",0,0,0
+168,Logan Kaplan,3814,27,0,0,0,3,0,15,no,"Didn’t shoot in auto, Slow shooter, good climber",0,0,15
+169,Griffin,5842,27,2,0,0,2,1,0,no,"Pretty fast and decisive, takes a long time to intake",0,0,0
+170,Tyler Heasley,325,27,2,0,0,5,0,6,no,Quick and nimble with its swerve drive and has the potential to be good in both defense and offense. Has a turret shooter but it seems to be pretty inconsistent ,0,0,6
+171,Daniel Roberts,2614,27,2,2,0,3,0,6,yes,"Made many shots, both shots in autonomous. Play a good mix of defense and offense. Fast shots",8,4,18
+172,Elise,4150,28,2,0,0,0,2,6,no,Only could climb to mid bar ,0,0,6
+173,Tyler Heasley,2641,28,2,0,0,0,5,6,no,Nothing,0,0,6
+174,Jack,144,28,2,0,0,3,2,0,no,"Missed majority of shots, has swerve/omni drive, gets pushed around well",0,0,0
+175,Griffin,6032,28,2,0,1,0,0,6,no,"slow intake, can only hold one at a time.",2,1,9
+176,Logan Kaplan,7515,28,2,0,0,0,1,6,yes,"Defensive bot, can only shoot lower hoop, ",0,0,6
+177,Daniel Roberts,6834,28,2,0,2,0,2,4,no,"Made many shots, but takes time to scoop many cargo balls up. Can make shots in auto",4,2,10
+178,Griffin,2656,29,2,0,0,3,0,6,no,Shooting takes a very long time,0,0,6
+179,Jack,4027,29,2,0,0,0,6,6,no,Seemed to have a hard time navigating around the field ,0,0,6
+180,Elise,8027,29,2,1,0,0,4,6,no,"Didn’t do much, shot mainly in lower hub and only climbed to mid bar. ",4,2,12
+181,Logan Kaplan,378,29,2,0,0,1,3,6,no,"Made all their shots, Slow shot, climbed off middle",0,0,6
+182,Daniel Roberts,2053,29,2,0,0,3,0,4,no,"Missed many shots, but could take longer and faster shots. Missed shots in auto ",0,0,4
+183,Tyler Heasley,4547,30,2,0,0,0,0,0,unsure,Didn’t move,0,0,0
+184,Aaron Friedlander,4085,30,2,0,0,1,0,6,no,Drove slow ,0,0,6
+185,Elise,4269,30,2,0,1,0,0,6,yes,"Played lots of defense, didn’t shoot much cargo, got to only middle bar. ",2,1,9
+186,Logan Kaplan,7460,30,2,1,0,1,0,10,no,"Didn’t shoot that much cargo, Looked lost",4,2,16
+187,Griffin,4145,30,2,0,0,4,1,4,no,they shot a lot but were usually short of the goal,0,0,4
+188,Jared Bernon,302,30,2,1,0,3,2,6,no,Fast mid rung  swerve gets pushed ,4,2,12
+189,Daniel Roberts,302,30,2,1,0,2,3,6,unsure,"Missed one shot on auto, but made most shots on teleportation. Missed a few due to defense of the other team. Had great team effort towards to end, managing to score a few points and went for a mid rung hang",4,2,12
+190,GK,1708,31,2,1,0,0,0,0,unsure,I think they were having issues with intake and maybe drive train and ended up just sitting there,4,2,6
+191,Giada Klisovic,2252,31,2,3,0,0,1,0,unsure,A lot of shots missed or bounced out,12,6,18
+192,Aaron Friedlander,156,31,2,1,0,1,0,6,yes,The balance was very off shooting was not accurate,4,2,12
+193,Sarah Friedlander,3201,31,2,0,0,0,8,4,no,Can do defense. Autonomous is not accurate,0,0,4
+194,Griffin,156,31,2,1,0,2,0,6,no,A ton of shots bounced out,4,2,12
+195,Truman,156,31,2,0,0,0,0,6,no,Missed every shot because they bounced out looks like way too much spin,0,0,6
+196,Sean,379,31,2,0,0,0,0,15,no,"I can't tell if I zoned out or if they didn't make anything, but in auto they shot two way too far",0,0,15
+197,Jared Bernon,3201,31,2,0,0,0,7,4,no,A bit top heavy fine swerve ,0,0,4
+198,Daniel Suh,695,31,2,0,3,0,8,6,no,"Slow cycle time because the entire intake arm has to come down, auto routine is pretty impressive",6,3,15
+199,Griffin,7165,32,2,0,1,0,4,10,no,They tried for a lot more low goal shots but missed,2,1,13
+200,GK,5740,32,2,1,0,4,0,15,no,Can shoot 2 at once ,4,2,21
+201,Jared Bernon,117,32,2,0,0,0,0,15,no,They had intake problems ,0,0,15
+202,Aaron Friedlander,7165,32,2,0,0,0,5,6,no,Very slow and only shot in lower hub ,0,0,6
+203,Giada Klisovic,4050,32,2,0,2,0,7,0,no,No,4,2,6
+204,Truman,7165,32,2,0,1,0,4,6,no,Only low goal capable and missed a lot of the shots.  Very tippy,2,1,9
+205,Daniel Suh,2614,32,2,3,0,9,0,6,no,"Impressive robot, turret was pretty accurate (missed 3). Intake is also very fast.",12,6,24
+206,Sean,120,32,2,1,0,5,2,0,no,Sade,4,2,6
+207,Aaron Friedlander,5492,33,2,0,0,1,0,6,no,No comment ,0,0,6
+208,Giada Klisovic,2603,33,2,0,1,6,0,10,no,No,2,1,13
+209,Sean,1511,33,2,2,0,0,10,0,no,Runned out of time for mid bar climb ,8,4,12
+210,Griffin,5842,33,2,0,0,1,2,0,no,"They overshot a lot of their high goal shots, were pushed easily",0,0,0
+211,Truman,5492,33,2,0,1,1,0,0,no,Rough match couldn't really pick up ball then got disabled for most of match(cute bumpers though),2,1,3
+212,GK,5842,33,2,0,0,1,2,0,no,They have crap aim,0,0,0
+213,Daniel Suh,4150,33,2,2,0,0,0,15,yes,"Good at defense, was able to shut down multiple robots with the driver looking confident. Also has a good climb, although it is shaky.",8,4,27
+214,Daniel Roberts,3539,33,2,3,0,2,0,15,yes,Made many shots in autonomous. Was able to play defense throughout the rest of the game. Had time for a traversal rung hang also,12,6,33
+215,Giada Klisovic,2641,34,2,0,1,0,7,0,no,No,2,1,3
+216,Remy,4027,34,2,0,1,0,4,6,no,Some inaccurate shots,2,1,9
+217,Griffin,4991,34,2,0,0,0,2,10,no,very very wobbly,0,0,10
+218,GK,3954,34,2,0,1,0,9,6,no,They’re ok just a bit indescieve ,2,1,9
+219,Aaron Friedlander,4991,34,2,0,1,1,0,10,no,No comment ,2,1,13
+220,Sean,291,34,2,0,1,0,9,0,no,I am about to fall asleep,2,1,3
+221,Jared Bernon,4027,34,2,0,0,0,6,6,no,They were ok mid rung was fast ,0,0,6
+222,Truman,4991,34,2,0,1,0,3,10,no,"Missed a lot of shots seems like alignment issues, not very agile pretty tippy.  Looks like it can go traversal but something happened and it couldn't go higher than the third",2,1,13
+223,Daniel Roberts,4027,34,0,0,3,0,2,6,no,Made around half their shots. Climbed middle,6,3,15
+224,Daniel Suh,2053,34,2,0,1,3,1,6,no,"Shoots high from edge of tarmac, low from base of hub",2,1,9
+225,GK,7515,35,2,0,0,0,7,6,no,Very unstable going to tip over,0,0,6
+226,Truman,2656,35,2,0,0,0,0,0,yes,"Shooter wheels weren't spinning so they couldn't shoot at all, played defense but not very fast bot",0,0,0
+227,Aaron Friedlander,2656,35,2,0,0,0,0,0,no,Very slow ,0,0,0
+228,Giada Klisovic,144,35,2,0,0,3,0,6,unsure,No,0,0,6
+229,Remy,3814,35,2,0,0,3,0,0,no,Ok,0,0,0
+230,Griffin,2656,35,2,0,0,0,0,0,unsure,"Very slow, shooter seemed broken",0,0,0
+231,Sean,554,35,2,1,0,7,0,15,no,Yoo i think they can shoot while moving sideways with their swerve,4,2,21
+232,Daniel Suh,302,35,2,2,0,0,8,6,no,"All but one of their cycles were 1 ball for some reason. Fastish cycle time, but only got 1 ball in lower per cycle. ",8,4,18
+233,Daniel Roberts,3814,35,2,1,0,2,0,0,no,"Made slow, but accurate shots. Missed one shot in auto",4,2,6
+234,Charlie,7460,36,2,2,0,4,0,15,no,The other team defended them very easily ,8,4,27
+235,Daniel Roberts,3201,36,2,0,0,0,3,6,no,"Missed its autonomic shots, but made many driver shots in lower hub",0,0,6
+236,Griffin,3504,36,2,0,0,0,5,4,no,"Seemed light, missed some shots",0,0,4
+237,Logan Kaplan,2051,36,2,2,0,2,1,6,no,"Heavyweight, Slow turning, Fast Shooter, Not very accurate, shoots from anywhere",8,4,18
+238,Sean,1708,36,2,0,0,0,0,0,no,"Shot many times, missed all of them, and fell asleep in the tarmac with 20 seconds to spare",0,0,0
+239,Aaron Friedlander,4467,36,0,0,0,0,0,6,unsure,Did nothing just moved around ,0,0,6
+240,Logan Kaplan,1787,37,2,2,0,8,0,15,no,We should alliance with this team,8,4,27
+241,Aaron Friedlander,2252,37,2,2,0,3,0,0,no, acurate shooter ,8,4,12
+242,Griffin,156,37,2,1,0,5,0,0,no,"jerky movements, tried to climb but failed",4,2,6
+243,Charlie,6834,37,2,0,0,0,6,6,no,Made 50% of their shots ,0,0,6
+244,Sean,120,37,2,0,0,0,9,0,no,Some defense at the end against hanging,0,0,0
+245,Daniel Roberts,4085,37,2,0,2,0,2,6,no,"Made slow shots into lower hub,  climbed middle, made shots on auto",4,2,12
+246,Aaron Friedlander,6032,38,0,0,0,0,1,0,no,Bad shooter moves around the field doing nothing ,0,0,0
+247,Charlie,695,38,2,0,3,0,4,0,no,Climbed off center ,6,3,9
+248,Griffin,27,38,2,4,0,18,0,0,no,"Very decisive and fast, very quick to shoot",16,8,24
+249,Sean,7274,38,2,0,0,0,1,0,yes,I couldn't tell that they had an intake until it fell down at the end of the match?,0,0,0
+250,Logan Kaplan,4269,38,2,0,0,0,4,6,no,"Missed a-lot of shots, lower hoop only, Slow",0,0,6
+251,Daniel Roberts,378,38,2,2,0,3,0,6,no,Made most of their shots. All autonomous shots,8,4,18
+252,Aaron Friedlander,4547,39,0,0,0,0,0,0,no,Did not move at all during the match ,0,0,0
+253,Charlie,3260,39,2,1,0,1,0,0,unsure,Stopped moving a lot and their intake isn’t the best at loading cargo. ,4,2,6
+254,Logan Kaplan,379,39,2,1,0,0,1,15,yes,"Fast,  Swerve, Good at defense, can climb to transversal, ",4,2,21
+255,Sean,325,39,2,2,0,5,1,15,no,Couple bounce outs but you're not you when you're hangry,8,4,27
+256,Anna,8027,39,2,2,0,0,1,6,no,"Moves in almost circles, weird drivetrain but possibly good defense ",8,4,18
+257,Daniel Roberts,5740,39,2,2,0,2,0,15,no,"Made most of their shots, climbed middle",8,4,27
+258,Aaron Friedlander,2656,40,0,0,0,1,0,0,yes,No comment ,0,0,0
+259,Charlie,3954,40,2,1,1,0,8,0,no,Good effort ,6,3,9
+260,Jared Bernon,4150,40,2,1,0,1,2,15,no,Not a great scorer but great climb ,4,2,21
+261,Logan Kaplan,4145,40,2,0,0,4,0,6,no,"Missed auto shots, Long distance shooter, ",0,0,6
+262,Anna,144,40,2,0,0,3,5,0,unsure,Pretty good at scoring ,0,0,0
+263,Sean,117,40,2,0,0,0,0,0,yes,"I mean, they did like 50 seconds of defense then left to fail at climb because their bumper fell off",0,0,0
+264,Aaron Friedlander,7460,41,2,0,0,2,0,10,unsure,No comment ,0,0,10
+265,Tyler Heasley,4991,41,2,0,1,0,1,15,no,Nothing else,2,1,18
+266,Jared Bernon,4050,41,2,0,2,0,5,0,no,They didn’t climb in time because it was really slow ,4,2,6
+267,Truman,3201,41,2,1,0,0,1,4,yes,"Something happened to their intake and they couldn't pick up any balls after one cycle so they just payed defense, it was decent defense they had some well placed contact but nothing crazy",4,2,10
+268,Griffin,2641,41,2,0,2,0,4,6,no,very slow cycles and intake,4,2,12
+269,Sean,1511,41,2,1,0,3,4,6,no,I did not know what number i was looking for the first 20 seconds!!,4,2,12
+270,Sean,2053,42,2,1,0,1,1,6,unsure,They kept running into the wall and hangar,4,2,12
+271,Daniel Roberts,291,42,2,0,1,0,3,4,no,Made all of their shots in auto and by driver,2,1,7
+272,Jared Bernon,1708,42,2,0,1,0,2,0,no,Mostly useless,2,1,3
+273,Tyler Heasley,3539,42,2,3,0,9,0,10,no,Good offense with potential to be good in defense and is capable of going to the traversal ,12,6,28
+274,Griffin,120,42,2,2,0,0,11,0,no,none,8,4,12
+275,Truman,4085,42,2,0,1,0,2,6,no,They're intake was not very reliable took a long time to pick up balls. Looks like they can go higher than mid rung but they move very slow and only one hook grabbed. Also all of their pnumatics looked really slow ,2,1,9
+276,Tyler Heasley,7165,43,2,0,1,0,7,10,no,Nothing else,2,1,13
+277,Jared Bernon,4269,43,2,0,0,0,3,0,no,They did 3 pull ups but the climb can’t hold ,0,0,0
+278,Ben Wei,4027,43,2,0,0,0,0,6,no,their robot broke for the whole game except for the climb,0,0,6
+279,Griffin,2603,43,2,1,0,0,0,0,no,Stayed still for the majority of the match,4,2,6
+280,Sean,4467,43,2,2,0,0,0,6,yes,Their intake was too wiggly (broken) ,8,4,18
+281,Daniel Roberts,695,43,2,0,3,0,3,6,no,Made all their shots in autonomous and as driver. ,6,3,15
+282,Ben Wei,6032,44,2,0,0,0,0,4,no,they were really bad,0,0,4
+283,Remy,2051,44,2,0,0,3,0,4,no,Most shots didn’t make it ,0,0,4
+284,Griffin,3814,44,2,0,0,0,0,6,no,"They looked a bit lost in tele, but did climb well",0,0,6
+285,Sean,379,44,2,0,0,0,0,15,no,"Jittery drivetrain, and took a quick nap in the middle (disabled) to wake up to climb",0,0,15
+286,Daniel Roberts,554,44,2,1,0,3,0,15,no,Made most of their shots in auto and with driver. We able to climb from middle to traversal,4,2,21
+287,Tyler Heasley,3504,45,2,0,2,0,9,6,no,Nothing else,4,2,12
+288,Aaron Friedlander,8027,45,2,0,0,0,0,0,no,Didn’t really do much ,0,0,0
+289,Sean,325,45,2,1,0,14,0,0,no,Got defended against,4,2,6
+290,Ben Wei,7274,45,2,0,0,0,1,6,no,they had a lot of trouble intaking balls,0,0,6
+291,griffin,6834,45,2,0,1,0,1,6,no,"The robot could only store one and was very slow, they also  missed most of their shots",2,1,9
+292,Daniel Roberts,5842,45,2,0,0,2,0,6,no,"Made most of their shots with a driver. During autónomos, they missed one shot",0,0,6
+293,GK,5492,46,2,0,1,0,0,15,unsure,"Driving looked unstable, Not sure what they were doing tried offense I think I’d defense then went to offense for like 15 seconds but then went and climbed",2,1,18
+294,Remy,156,46,2,0,0,6,0,6,no,Super wobbly ,0,0,6
+295,Griffin,3260,46,2,0,0,6,0,10,no,"Almost fell off climb, was slow",0,0,10
+296,Daniel Suh,4145,46,2,0,0,3,0,0,no,"Stopped moving with like 45 seconds left, otherwise a fast robot with an inaccurate shooter",0,0,0
+297,Giada Klisovic,378,46,2,1,1,0,0,4,unsure,Got disabled a few times.,6,3,13
+298,Truman,2614,46,2,3,0,15,0,6,no,They have a pretty good swerve drive quick cycle starts.  Also turret was very accurate and they can shoot from a lot of places,12,6,24
+299,Giada Klisovic,7515,47,2,1,0,0,0,4,yes,Very top heavy ,4,2,10
+300,GK,302,47,2,2,0,2,8,6,no,They can shoot both but prefer lower hub kinda slow,8,4,18
+301,Daniel Suh,4547,47,2,0,0,0,0,0,yes,"Got disabled by another boy halfway through, not very good defense. ",0,0,0
+302,Griffin,27,47,2,3,0,18,0,15,no,"Their autonomous is fast, but was messed up by other robots on it's alliance",12,6,33
+303,Truman,5740,47,2,1,0,4,0,15,no,"Interesting shooter looks like it kinda scoops it up, the shots they took were accurate but very slow cycle time.  Also they stood still for awhile maybe connection issue?  Traversal climb looked good",4,2,21
+304,Remy,2252,47,2,0,0,0,0,6,yes,"Ok at defense, best I’ve seen I think but still not great ",0,0,6
+305,Giada Klisovic,3954,48,2,0,0,0,4,0,unsure,No,0,0,0
+306,Daniel Suh,2641,48,2,0,2,0,9,0,no,"Driver did not look in control, lots of micro adjustments to get a ball/line up. ",4,2,6
+307,Truman,1511,48,2,2,0,7,4,6,no,Shots looked pretty solid also they switched to low goal to make sure they got the ranking point.  Pretty solid swerve drive somewhat quick cycles,8,4,18
+308,Remy,2656,48,2,1,0,1,0,0,no,"Slow, struggling a little maybe a lot, no shooting or defense, simply wandering  ",4,2,6
+309,Griffin,7165,48,2,0,0,0,4,10,no,Slow Climber,0,0,10
+310,Griffin,7460,49,2,0,0,4,0,10,no,none,0,0,10
+311,Giada Klisovic,3539,49,2,1,0,5,2,15,unsure,No,4,2,21
+312,GK,4085,48,2,0,1,0,0,6,no,They were sort of unsure,2,1,9
+313,Remy,2053,49,2,1,0,0,0,0,yes,"Stopped working for a while but came back on, seems like defense bot but not the best at it at all, attempted to hang low rung but didn’t work ",4,2,6
+314,Jared Bernon,4269,49,2,0,0,0,4,6,no,Nothing ,0,0,6
+315,Daniel Suh,379,49,2,0,0,0,6,0,no,"Driver looked good and in control, but shooter missed a couple of shots",0,0,0
+316,Truman,144,49,2,1,0,10,6,6,no,Their shooter looked solid from long range but during auto they took 3 shots and 2 bounced out even though they were good shots,4,2,12
+317,GK,4150,50,2,0,0,0,5,15,no,Slow offense good climb,0,0,15
+318,Giada Klisovic,4027,50,2,0,1,0,4,6,unsure,No,2,1,9
+319,Remy,291,50,2,0,1,0,11,0,no,"Issue with intake towards end, some what shaky but reliable lower hub shooter ",2,1,3
+320,Truman,1787,50,2,2,0,10,0,15,no,Probably the best not here:),8,4,27
+321,Daniel Suh,120,50,2,1,0,2,2,0,no,"Has a very far shot, but is very inaccurate (75%ish missed)",4,2,6
+322,Griffin,7274,50,2,0,0,0,1,0,no,weird intake,0,0,0
+323,Charlie,156,51,2,2,0,6,0,6,no,Uneven climb ,8,4,18
+324,Jared Bernon,554,51,2,1,0,3,0,15,no,Good climb but had a lot of bounce outs ,4,2,21
+325,Logan Kaplan,117,51,2,0,0,0,0,15,yes,"Good defender, Fast, Good climber",0,0,15
+326,Griffin,3260,51,2,0,1,1,0,0,no,"They got stuck on the electrical bump  and have no centering mechanism for their intake, making it very difficult to fill.",2,1,3
+327,Daniel Roberts,3201,51,2,0,0,0,0,4,no,"Wasn’t able to do much, might’ve broken down after autonomous stage. Great effort to fix it and, at the end, was able to hang into a lower rung",0,0,4
+328,Aaron  Friedlander,695,52,2,0,2,0,6,6,no,No comment ,4,2,12
+329,Jared Bernon,2603,52,2,2,0,7,0,10,no,The climb is sketchy ,8,4,22
+330,Logan Kaplan,7515,52,2,0,0,0,0,6,yes,"Very Wobbly movement, No swerve, not that good at defense",0,0,6
+331,Anna,8027,52,0,0,1,1,1,4,no,They stopped moving after autonomous but still managed to climb ,2,1,7
+332,Daniel Roberts,2051,52,2,0,0,3,0,6,no,"Missed most of their shots, including autonomous. Made quick shots",0,0,6
+333,Charlie,2252,52,2,2,0,2,0,0,unsure,Something happened to the robot so most of this info was inconclusive…,8,4,12
+334,Charlie,325,53,2,1,0,7,0,6,no,Great team effort,4,2,12
+335,Aaron  Friedlander,4145,53,2,0,0,0,0,4,yes,Only defended ,0,0,4
+336,Daniel Roberts,27,53,2,3,0,6,0,15,no,"Made most of their shots. Missed one in autonomous, but this was due to a collision. Was able to climb from middle to traversal. Fast shooter, especially during autonomous",12,6,33
+337,Jared Bernon,4467,53,2,1,0,0,7,0,no,They didn’t do much only shot in the low goal and had a hard time find space to score ,4,2,6
+338,Logan Kaplan,6834,53,2,0,1,0,3,0,no,"could only hold 1 cargo, didnt do much",2,1,3
+339,Anna,302,53,0,0,0,0,12,6,no,Good low scoring bot,0,0,6
+340,Charlie,1708,54,0,0,0,1,0,0,unsure,Didn’t do much. Just kinda shot a little. ,0,0,0
+341,Aaron  Friedlander,5740,54,2,1,0,3,0,15,no,No comment ,4,2,21
+342,Jared Bernon,2614,54,2,4,0,10,0,0,no,Great shooter but bounce out and can’t find space at times ,16,8,24
+343,Ben Wei,6032,54,2,0,1,0,8,4,no,"they consistently missed one ball every cycle, if they fixed it they would have double the points",2,1,7
+344,Logan Kaplan,3504,54,2,0,2,0,5,6,no,"Only shoots at lower hoop, slow shooter",4,2,12
+345,Jared Bernon,378,55,2,0,0,0,0,0,no,Didn’t move in teleop ,0,0,0
+346,Aaron  Friedlander,4547,55,2,0,0,0,0,0,yes,No comment ,0,0,0
+347,Logan Kaplan,3814,55,2,1,0,0,0,15,no,"Slow movement, Missed many shots, Good climber",4,2,21
+348,Charlie,4050,55,2,0,2,0,9,6,no,Tried to carry the team. ,4,2,12
+349,Ben Wei,120,55,2,2,0,0,15,0,no,carried team to 20 ball ranking point,8,4,12
+350,Tyler Heasley,3201,56,2,0,0,0,4,0,no,Nothing elsewhere,0,0,0
+351,Elise,7460,56,2,0,0,1,0,15,no,"Got to traversal bar, couldn’t shoot much. ",0,0,15
+352,Sean,291,56,2,0,0,0,7,0,yes,Yuh,0,0,0
+353,Ben Wei,4269,56,0,1,0,0,6,0,no,probably would have climbed if their teammates werent,4,2,6
+354,Daniel Roberts,2656,56,2,2,0,2,1,6,no,Missed most shots. Shot slowly and takes time to line up,8,4,18
+355,Elise,3260,57,2,0,0,2,0,10,no,"Shot cargo a few times, almost tipped over, didn’t play defense. ",0,0,10
+356,Ben Wei,7274,57,2,0,0,0,1,6,yes,defense wasn't great,0,0,6
+357,Tyler Heasley,144,57,2,2,0,0,7,6,no,Nothing else,8,4,18
+358,Griffin,2252,57,2,2,0,4,0,6,no,"They picked up one ball at a time, they had a very small intake so even through they shot high they shot very few balls.",8,4,18
+359,Sean,1511,57,2,0,0,5,3,4,no,Good driver,0,0,4
+360,Daniel Roberts,2603,57,2,1,0,2,0,0,no,"Missed many shots. Attempted to climb from the middle, but fell on the way to traversal ",4,2,6
+361,Griffin,117,56,0,1,0,0,0,6,no,very jerky movement,4,2,12
+362,Elise,1787,58,2,0,0,11,0,15,no,AMAZING ROBOT ,0,0,15
+363,Tyler Heasley,27,58,2,4,0,15,0,15,no,"Good climbing, insane  scoring potential and maneuverability",16,8,39
+364,Ben Wei,3539,58,2,1,0,9,0,10,no,really good robot,4,2,16
+365,Griffin,8027,58,2,0,0,0,0,6,yes,"Swerve drive, but they were not able to push 27 while they were shooting even though they only defending 27",0,0,6
+366,Daniel Roberts,4145,58,2,2,0,2,0,4,yes,Defensive bot. Wasn’t able to climb well close to the end,8,4,16
+367,Sean,2641,58,2,0,2,0,0,4,yes,They picked up two red balls and tried to defend against us the whole time,4,2,10
+368,Ben Wei,5740,59,2,0,0,4,0,15,no,Climbed rlly early,0,0,15
+369,Tyler Heasley,4027,59,2,1,0,0,5,6,no,Nothing else,4,2,12
+370,Sean,302,59,0,0,1,1,10,6,no,Carried in terms of low goal ranking point,2,1,9
+371,Elise,156,59,2,0,0,5,0,6,no,"Made most of their shots, somewhat slow. ",0,0,6
+372,Griffin,325,59,2,0,0,7,0,0,no,They spent a long time positioning for shots and prioritized shooting over climbing,0,0,0
+373,Daniel Roberts,1708,59,2,0,0,2,0,0,no,Missed many shots ,0,0,0
+374,Tyler Heasley,3814,60,2,0,0,3,0,15,no,Nothing else,0,0,15
+375,Ben Wei,7515,60,2,0,0,0,5,6,no,their intake is bad,0,0,6
+376,Elise,3504,60,2,0,2,0,11,6,no,Scored a lot however it was mainly in lower hub.  ,4,2,12
+377,Sean,378,60,2,1,0,0,9,0,no,Done for today!,4,2,6
+378,Griffin,4150,60,0,1,0,4,0,15,no,"Smooth shooter, but slow cycle time",4,2,21
+379,Daniel Roberts,7165,60,2,0,2,0,3,0,no,Made all their shots. Robots arms broke while climbing mid rung ,4,2,6
