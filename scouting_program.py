@@ -1,17 +1,13 @@
 from __future__ import print_function
 from scipy import stats
-import os
-import time
-import pickle
 import pandas as pd
 from auth import spreadsheet_service
 import xlsxwriter
 from colour import Color
 
-COLORS = None
-
-
 workbook = xlsxwriter.Workbook('output.xlsx')
+writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
+
 
 def create_dict_dataframe(df, team_number):
     """
@@ -173,41 +169,7 @@ def distribute_rows(spreadsheet_id, sheetId):
         body=batch_update_spreadsheet_request_body).execute()
 
 
-def create_spreadsheet(team, data, spreadsheet_id, index):
-    # creates a new tab
-    global b
-
-    batch_update_spreadsheet_request_body = {
-        "requests": [
-            {
-                "addSheet": {
-                    "properties": {
-                        "title": str(team),
-                        "gridProperties": {
-                            "rowCount": 100,
-                            "columnCount": 20
-                        },
-                        "tabColor": {
-                            "red": COLORS[index].rgb[0],
-                            "green": COLORS[index].rgb[1],
-                            "blue": COLORS[index].rgb[2],
-                        }
-                    }
-                }
-            },
-        ]
-    }
-
-    response = spreadsheet_service.spreadsheets().batchUpdate(
-        spreadsheetId=spreadsheet_id,
-        body=batch_update_spreadsheet_request_body).execute()
-
-    sheet_id = response.get('replies')[0]['addSheet']['properties']['sheetId']
-
-    return sheet_id
-
-
-def write_data(team, data, spreadsheet_id):
+def write_data(team, data):
     # writes in the raw data
 
     raw_data = data[['qual_number', 'total_auto_points', 'total_teleop_points', 'climb', 'total_points']]
@@ -218,61 +180,40 @@ def write_data(team, data, spreadsheet_id):
     average_total_points = int(data['total_points'].mean(axis=0))
 
     raw_data.columns = ['Qualification number', 'Auto Points', 'Teleop Points', 'Climb Points', 'Total Points']
-    raw_data = raw_data.T.reset_index().values.T.tolist()  # some double transpose magic here
-    num_columns = len(raw_data)
-    range_name = f'{team}!B1:F{num_columns}'
-    body = {
-        'values': raw_data
-    }
-    result = spreadsheet_service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_name,
-                                                                valueInputOption='USER_ENTERED', body=body).execute()
+    averages = pd.DataFrame([['N/A', average_auto, average_tele, average_climb, average_total_points]],
+                            columns=raw_data.columns)
+    raw_data = pd.concat([raw_data, averages])
 
-    # writes in the averages
+    left_hand_column = [''] * len(raw_data)
+    left_hand_column[-1] = 'Averages:'
+    raw_data.insert(0, '', left_hand_column, True)
 
-    range_name = f'{team}!A{num_columns + 1}:F{num_columns + 1}'
-    body = {
-        'values': [['Averages:', '', average_auto, average_tele, average_climb, average_total_points]]
-    }
-    spreadsheet_service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_name,
-                                                       valueInputOption='USER_ENTERED', body=body).execute()
+    raw_data.to_excel(writer, sheet_name=str(team), index=False)
 
 
-def write_information(team, data, spreadsheet_id):
-    raw_data = data[['qual_number', 'name', 'written_information']]
+def write_qualitative_information(team, data):
+    raw_data = data[['name', 'written_information']]
 
-    raw_data.columns = ['Qualification number', 'Name', 'Written Information']
-    raw_data = raw_data.T.reset_index().values.T.tolist()  # some double transpose magic here
-    num_columns = len(raw_data)
-    range_name = f'{team}!H5:J{5 + num_columns}'
-    body = {
-        'values': raw_data
-    }
-    spreadsheet_service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_name,
-                                                       valueInputOption='USER_ENTERED', body=body).execute()
+    raw_data.columns = ['Name', 'Written Information']
+
+    raw_data.to_excel(writer, sheet_name=str(team), index=False, startrow=0, startcol=7)
 
 
-def statistics(team, data, spreadsheet_id):
-    columns = ['Defense Percentage', 'LSRL Slope (higher means improvement)',
-               'T-test between Day 1 and 2 (less means something occurred)']
-    defense_percentage = len(data['total_points'][data['defense'] == 'yes']) / len(data['defense'])
+def write_statistics(team, data):
+    columns = ['Defense Percentage', 'LSRL Slope',
+               'T-test']
+    defense_percentage = round(len(data['total_points'][data['defense'] == 'yes']) * 100 / len(data['defense']), 2)
 
     slope, _, _, _, _ = stats.linregress(data['total_points'], range(0, len(data['total_points'])))
 
-    p_value = 'N/A (only one day of quals)'
+    p_value = 'N/A'
     if len(pd.unique(data['time'])) != 1:
         p_value = stats.ttest_ind(data['total_points'][data['time'] == 1],
                                   data['total_points'][data['time'] == 2]).pvalue
 
-    range_name = f'{team}!H{1}:J{2}'
-    body = {
-        'values': [
-            columns,
-            [defense_percentage, slope, p_value]
-        ]
-    }
+    df = pd.DataFrame([[defense_percentage, slope, p_value]], columns=columns)
 
-    spreadsheet_service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_name,
-                                                       valueInputOption='USER_ENTERED', body=body).execute()
+    df.to_excel(writer, sheet_name=str(team), index=False, startrow=len(data) + 4, startcol=1)
 
 
 def main():
@@ -285,64 +226,27 @@ def main():
 
     team_list = get_teams(df)
 
-    num_teams = len(team_list)
-
-    global COLORS
-    COLORS = list(Color('orange').range_to(Color('grey'), num_teams))
+    colors = list(Color('orange').range_to(Color('grey'), len(team_list)))
 
     for i, team in enumerate(team_list):
         print(f'processing team {team}')
         data = create_dict_dataframe(df, team)
-        sheet_id = 0
-        while True:
-            try:
-                sheet_id = create_spreadsheet(team, data, spreadsheet_id, i)
-                break
-            except Exception as e:
-                print('create_spreadsheet: quota reached, sleeping for 65 seconds...')
-                print(e)
-                time.sleep(65)
+        worksheet = workbook.add_worksheet(str(team))
+        write_data(team, data)
+        write_qualitative_information(team, data)
+        write_statistics(team, data)
 
-        while True:
-            try:
-                write_data(team, data, spreadsheet_id)
-                break
-            except Exception as e:
-                print('write_data: quota reached, sleeping for 65 seconds...')
-                print(e)
-                time.sleep(65)
+        writer.sheets[str(team)].set_column(0, 0, 10)
+        writer.sheets[str(team)].set_column(1, 1, 19)
+        writer.sheets[str(team)].set_column(2, 2, 13)
+        writer.sheets[str(team)].set_column(3, 3, 13)
+        writer.sheets[str(team)].set_column(4, 4, 13)
+        writer.sheets[str(team)].set_column(5, 5, 13)
+        writer.sheets[str(team)].set_column(6, 6, 15)
+        writer.sheets[str(team)].set_column(7, 7, 18)
+        writer.sheets[str(team)].set_column(8, 8, 150)
 
-        while True:
-            try:
-                write_information(team, data, spreadsheet_id)
-                break
-            except Exception as e:
-                print('write_information: quota reached, sleeping for 65 seconds...')
-                print(e)
-                time.sleep(65)
-
-        while True:
-            try:
-                statistics(team, data, spreadsheet_id)
-                break
-            except Exception as e:
-                print('statistics: quota reached, sleeping for 65 seconds...')
-                print(e)
-                time.sleep(65)
-
-        while True:
-            try:
-                distribute_rows(spreadsheet_id, sheet_id)
-                break
-            except Exception as e:
-                print('distribute_rows: quota reached, sleeping for 65 seconds...')
-                print(e)
-                time.sleep(65)
-
-    os.remove('test')
-
-    with open("test", "wb") as fp:  # Pickling
-        pickle.dump(sheetIds, fp)
+    writer.save()
 
 
 if __name__ == '__main__':

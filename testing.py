@@ -9,7 +9,6 @@ from googleapiclient.errors import HttpError
 sheet_id = '1uW-pBBW5-XOjCJ_b4iHtdY2PyA9WwCE0RvG1XCywtb4'
 
 
-
 def update_values(spreadsheet_id, range_name, value_input_option,
                   _values):
     """
@@ -42,28 +41,29 @@ def update_values(spreadsheet_id, range_name, value_input_option,
         batch_update_spreadsheet_request_body = {
             "requests": [
                 {
-                "addSheet": {
-                    "properties": {
-                    "title": "Deposits",
-                    "gridProperties": {
-                        "rowCount": 20,
-                        "columnCount": 12
-                    },
-                    "tabColor": {
-                        "red": 1.0,
-                        "green": 0.3,
-                        "blue": 0.4
+                    "addSheet": {
+                        "properties": {
+                            "title": "Deposits",
+                            "gridProperties": {
+                                "rowCount": 20,
+                                "columnCount": 12
+                            },
+                            "tabColor": {
+                                "red": 1.0,
+                                "green": 0.3,
+                                "blue": 0.4
+                            }
+                        }
                     }
-                    }
-                }
                 }
             ]
-            }
+        }
 
-        request = spreadsheet_service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=batch_update_spreadsheet_request_body)
+        request = spreadsheet_service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id,
+                                                                 body=batch_update_spreadsheet_request_body)
         # response = request.execute()
         # print(response)
-        
+
         print(f"{result.get('updatedCells')} cells updated.")
         return result
     except HttpError as error:
