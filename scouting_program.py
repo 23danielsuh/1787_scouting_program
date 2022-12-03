@@ -8,7 +8,6 @@ from colour import Color
 workbook = xlsxwriter.Workbook('output.xlsx')
 writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
 
-
 def create_dict_dataframe(df, team_number):
     """
     Takes a team number and generates a DataFrame of the scouting data from that team number
@@ -147,37 +146,19 @@ def get_teams(df):
 sheetIds = []
 
 
-def distribute_rows(spreadsheet_id, sheetId):
-    # creates a new tab
-    batch_update_spreadsheet_request_body = {
-        "requests": [
-            {
-                "autoResizeDimensions": {
-                    "dimensions": {
-                        "sheetId": sheetId,
-                        "dimension": "COLUMNS",
-                        "startIndex": 0,
-                        "endIndex": 15
-                    }
-                }
-            }
-        ]
-    }
-
-    spreadsheet_service.spreadsheets().batchUpdate(
-        spreadsheetId=spreadsheet_id,
-        body=batch_update_spreadsheet_request_body).execute()
-
-
 def write_data(team, data):
-    # writes in the raw data
+    """
+    Writes in the raw data and the averages
+    :param team: Team to get the statistics from
+    :param data: DataFrame for the data
+    """
 
     raw_data = data[['qual_number', 'total_auto_points', 'total_teleop_points', 'climb', 'total_points']]
 
-    average_auto = int(data['total_auto_points'].mean(axis=0) + data['taxi'].mean(axis=0))
-    average_tele = int(data['total_teleop_points'].mean(axis=0))
-    average_climb = int(data['climb'].mean(axis=0))
-    average_total_points = int(data['total_points'].mean(axis=0))
+    average_auto = round(data['total_auto_points'].mean(axis=0) + data['taxi'].mean(axis=0), 2)
+    average_tele = round(data['total_teleop_points'].mean(axis=0), 2)
+    average_climb = round(data['climb'].mean(axis=0), 2)
+    average_total_points = round(data['total_points'].mean(axis=0), 2)
 
     raw_data.columns = ['Qualification number', 'Auto Points', 'Teleop Points', 'Climb Points', 'Total Points']
     averages = pd.DataFrame([['N/A', average_auto, average_tele, average_climb, average_total_points]],
@@ -192,6 +173,11 @@ def write_data(team, data):
 
 
 def write_qualitative_information(team, data):
+    """
+    Writes the qualitative information from the DataFrame (written information / who scouted it)
+    :param team: Team to get the statistics from
+    :param data: DataFrame for the data
+    """
     raw_data = data[['name', 'written_information']]
 
     raw_data.columns = ['Name', 'Written Information']
@@ -200,11 +186,17 @@ def write_qualitative_information(team, data):
 
 
 def write_statistics(team, data):
+    """
+    Writes the statistics (defense percentage, an LSRL slope, and a p-value from a t-test
+    :param team: Team to get the statistics from
+    :param data: DataFrame for the data
+    """
     columns = ['Defense Percentage', 'LSRL Slope',
                'T-test']
     defense_percentage = round(len(data['total_points'][data['defense'] == 'yes']) * 100 / len(data['defense']), 2)
 
     slope, _, _, _, _ = stats.linregress(data['total_points'], range(0, len(data['total_points'])))
+    slope = round(slope, 5)
 
     p_value = 'N/A'
     if len(pd.unique(data['time'])) != 1:
@@ -216,10 +208,101 @@ def write_statistics(team, data):
     df.to_excel(writer, sheet_name=str(team), index=False, startrow=len(data) + 4, startcol=1)
 
 
+def write_graphs(team, data):
+    """
+    Write the graphs from a team's data (line graphs for points, pie chart for climb, and bar for 2-day)
+
+    Args:
+        team (int): team number to get the data from
+        data (pd.DataFrame): DataFrame to get the data
+    """
+    # i have no idea how this code works, but if you remove some of it, it stops working so don't change it
+    workbook1 = writer.book
+    worksheet1 = writer.sheets[str(team)]
+
+    (max_row, _) = data.shape
+
+
+    categories = ['total_auto_points', 'total_teleop_points', 'climb', 'total_points', 'day1vsday2']
+    y_axes = ['Total auto points', 'Total teleop points', 'Climb points', 'Total points', 'Total points']
+    colors = ['red', 'blue', '', 'green', '']
+    titles = ['Total Auto Points', 'Total Teleop Points', 'Climb Distribution', 'Total Points Scored', 'Day 1 vs. Day 2 (Total Points)']
+    positions = [(max_row + 7, 0), (max_row + 7, 5), (max_row + 7 + 16, 0), (max_row + 7 + 16, 5), (max_row + 7 + 16 + 16, 2)]
+
+    # xlsxwriter is annoying, you can't pass in values, so you're forced to create new entries
+    worksheet1.write(0, 24, 'No hang (0)')
+    worksheet1.write(1, 24, 'Low bar (4)')
+    worksheet1.write(2, 24, 'Middle bar (6)')
+    worksheet1.write(3, 24, 'High bar (10)')
+    worksheet1.write(4, 24, 'Traversal bar (15)')
+
+    worksheet1.write(0, 25, len(data[data['climb'] == 0]))
+    worksheet1.write(1, 25, len(data[data['climb'] == 4]))
+    worksheet1.write(2, 25, len(data[data['climb'] == 6]))
+    worksheet1.write(3, 25, len(data[data['climb'] == 10]))
+    worksheet1.write(4, 25, len(data[data['climb'] == 15]))
+
+    worksheet1.write(5, 24, 'Day 1')
+    worksheet1.write(6, 24, 'Day 2')
+    worksheet1.write(5, 25, data[data['time'] == 1]['total_points'].mean(axis=0))
+    average_day2 = 0
+    if(len(data[data['time'] == 2]) != 0):
+        average_day2 = data[data['time'] == 2]['total_points'].mean(axis=0)
+    worksheet1.write(6, 25, average_day2)
+
+    worksheet1.write(7, 24, 'Points')
+
+    for i in range(len(categories)):
+        if i == 2:
+            # pie chart
+            chart = workbook1.add_chart({'type': 'pie'})
+
+            chart.add_series({
+                'categories': [str(team), 0, 24, 4, 24],
+                'values': [str(team), 0, 25, 4, 25]
+            })
+
+            chart.set_title({'name': titles[i]})
+
+            # Insert the chart into the worksheet.
+            worksheet1.insert_chart(positions[i][0], positions[i][1], chart)
+        elif i == 4:
+            # bar graph
+            chart = workbook1.add_chart({'type': 'column'})
+
+            chart.add_series({
+                'categories': [str(team), 5, 24, 6, 24],
+                'values': [str(team), 5, 25, 6, 25],
+                'name': [str(team), 7, 24]
+            })
+
+            chart.set_title({'name': titles[i]})
+
+            # Insert the chart into the worksheet.
+            worksheet1.insert_chart(positions[i][0], positions[i][1], chart)
+        else:
+            # line graph
+            chart = workbook1.add_chart({'type': 'line', 'subtype': 'stacked'})
+            col = i + 2
+
+            chart.add_series({
+                'name': [str(team), 7, 24],
+                'values': [str(team), 1, col, max_row, col],
+                'line': {'color': colors[i]}
+            })
+
+            chart.set_x_axis({'name': 'Match'})
+            chart.set_y_axis({'name': y_axes[i]})
+
+            chart.set_title({'name': titles[i]})
+
+            # Insert the chart into the worksheet.
+            worksheet1.insert_chart(positions[i][0], positions[i][1], chart)
+
+
 def main():
     '''
     runs the program
-    :return: nothing
     '''
     spreadsheet_id = '1wyS8yFLIZZdr23nP2SdYWx4bDEFCmUC611Rfd9_OUvM'
     df = get_dataframe(spreadsheet_id)
@@ -245,6 +328,9 @@ def main():
         writer.sheets[str(team)].set_column(6, 6, 15)
         writer.sheets[str(team)].set_column(7, 7, 18)
         writer.sheets[str(team)].set_column(8, 8, 150)
+
+        writer.sheets[str(team)].set_tab_color(colors[i].hex)
+        write_graphs(team, data)
 
     writer.save()
 
