@@ -2,16 +2,19 @@
 
 Scouting program for Team 1787. Program will generate rankings based on several factors and create a new worksheet for every team. Code is not well documented currently, and is not very extensible for new seasons. Code efficiency is also bad, but performance is okay (<5 seconds).
 
+Tested using OSX and Python 3.10 (**IMPORTANT: REQUIRES PYTHON >=3.10**)
+
 ### Usage in Terminal
 
 1. Download the csv file from the Spreadsheet (File > Download > csv)
 2. Open up your Terminal app
 3. Download this repo's zip file and unzip it, or clone it with: `git clone https://github.com/23danielsuh/1787_scouting_program`
 4. Enter the repository with `cd 1787_scouting_program`
-5. Run `pip3 install -r requirements.txt` (make sure python is installed)
-6. To run the program, run `python3 scouting_program.py --path="~/Downloads/name_of_csv.csv"`
+5. Run `python3 --version`. Ensure that it says Python 3.10. If not, install the latest version of python from the website.
+6. Run `pip3 install -r requirements.txt` (make sure python is installed)
+7. To run the program, run `python3 scouting_program.py --path="~/Downloads/name_of_csv.csv"`
    1. For flag usage, run `python3 scouting_program.py --help`
-7. Open `output.xlsx` in either Google Drive or Excel
+8. Open `output.xlsx` in either Google Drive or Excel
 
 ### API Usage (Warning: Difficult to Set Up / Debug)
 
