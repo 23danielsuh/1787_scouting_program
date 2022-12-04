@@ -1,4 +1,7 @@
 from __future__ import print_function
+import numpy as np
+from collections import defaultdict
+import argparse
 from scipy import stats
 import pandas as pd
 from auth import spreadsheet_service
@@ -7,6 +10,9 @@ from colour import Color
 
 workbook = xlsxwriter.Workbook('output.xlsx')
 writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
+
+data_dict = defaultdict()
+
 
 def create_dict_dataframe(df, team_number):
     """
@@ -117,7 +123,7 @@ def process_dataframe(init_df):
     return df
 
 
-def get_dataframe(spreadsheet_id):
+def get_dataframe(spreadsheet_id, min_points):
     """
     Gets the spreadsheet from the API, and returns the spreadsheet converted to a pd.DataFrame
     :param spreadsheet_id: the id of the spreadsheet
@@ -129,7 +135,7 @@ def get_dataframe(spreadsheet_id):
                'teleop_upper_hub', 'teleop_lower_hub', 'climb', 'defense', 'written_information']
     df = pd.DataFrame(data[1:], columns=columns)
     df = process_dataframe(df)
-    return df
+    return df[df['total_points'] >= min_points]
 
 
 def get_teams(df):
@@ -171,6 +177,11 @@ def write_data(team, data):
 
     raw_data.to_excel(writer, sheet_name=str(team), index=False)
 
+    data_dict[team].append(average_auto)
+    data_dict[team].append(average_tele)
+    data_dict[team].append(average_climb)
+    data_dict[team].append(average_total_points)
+
 
 def write_qualitative_information(team, data):
     """
@@ -195,17 +206,21 @@ def write_statistics(team, data):
                'T-test']
     defense_percentage = round(len(data['total_points'][data['defense'] == 'yes']) * 100 / len(data['defense']), 2)
 
-    slope, _, _, _, _ = stats.linregress(data['total_points'], range(0, len(data['total_points'])))
+    slope, _, _, _, _ = stats.linregress(range(0, len(data['total_points'])), data['total_points'])
     slope = round(slope, 5)
 
-    p_value = 'N/A'
+    p_value = np.NaN
     if len(pd.unique(data['time'])) != 1:
-        p_value = stats.ttest_ind(data['total_points'][data['time'] == 1],
-                                  data['total_points'][data['time'] == 2]).pvalue
+        p_value = round(stats.ttest_ind(data['total_points'][data['time'] == 1],
+                                  data['total_points'][data['time'] == 2]).pvalue, 7)
 
     df = pd.DataFrame([[defense_percentage, slope, p_value]], columns=columns)
 
     df.to_excel(writer, sheet_name=str(team), index=False, startrow=len(data) + 4, startcol=1)
+
+    data_dict[team].append(defense_percentage)
+    data_dict[team].append(slope)
+    data_dict[team].append(p_value)
 
 
 def write_graphs(team, data):
@@ -304,15 +319,24 @@ def main():
     '''
     runs the program
     '''
+    parser = argparse.ArgumentParser(description='Scouting Program for 1787')
+    parser.add_argument('--min_points', type=int, help='only considers teams with total points higher than min_points (inclusive)', default=0)
+    args = parser.parse_args()
+
     spreadsheet_id = '1wyS8yFLIZZdr23nP2SdYWx4bDEFCmUC611Rfd9_OUvM'
-    df = get_dataframe(spreadsheet_id)
+    df = get_dataframe(spreadsheet_id, args.min_points)
 
     team_list = get_teams(df)
 
     colors = list(Color('orange').range_to(Color('grey'), len(team_list)))
 
+    rankings_worksheet = workbook.add_worksheet('rankings') 
+
     for i, team in enumerate(team_list):
         print(f'processing team {team}')
+
+        data_dict[team] = []
+
         data = create_dict_dataframe(df, team)
         worksheet = workbook.add_worksheet(str(team))
         write_data(team, data)
@@ -332,6 +356,27 @@ def main():
         writer.sheets[str(team)].set_tab_color(colors[i].hex)
         write_graphs(team, data)
 
+    # very convoluted way to do it, but performance is fast enough so it's fine
+    columns = ['Average Auto', 'Average Teleop', 'Average Climb', 'Average Total Points', 'Defense Percentage', 'LSRL Slope', 'P-value']
+    ranking_data = pd.DataFrame.from_dict(data_dict, columns=columns, orient='index')
+
+    rankings = pd.DataFrame()
+    rankings['#'] = range(1, len(team_list) + 1)
+    for i, column in enumerate(columns):
+        temp_df = pd.DataFrame()
+        temp_df[f'Team{i}'] = team_list
+        temp_df[column] = ranking_data[column].values
+        temp_df[column] = pd.to_numeric(temp_df[column])
+        temp_df = temp_df.sort_values(by=[column], ascending=(column == 'P-value'), ignore_index=True)
+        rankings = pd.concat([rankings, temp_df], axis=1, sort=False)
+
+    rankings.to_excel(writer, sheet_name='rankings', index=False, startrow=0, startcol=0)
+    writer.sheets['rankings'].set_column(0, 0, 3)
+    workbook1 = writer.book
+    cell_format = workbook1.add_format({'bg_color':'#FFD580', 'border': 1, 'valign': 'center'})
+    for i in range(2, 16, 2):
+        writer.sheets['rankings'].set_column(i, i, cell_format=cell_format, width=20)
+            
     writer.save()
 
 
