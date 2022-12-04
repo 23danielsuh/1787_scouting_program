@@ -14,7 +14,7 @@ writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
 data_dict = defaultdict()
 
 
-def create_dict_dataframe(df, team_number):
+def create_dict_dataframe(df, team_number, min_points):
     """
     Takes a team number and generates a DataFrame of the scouting data from that team number
     :param df: The DataFrame with all the data
@@ -123,7 +123,7 @@ def process_dataframe(init_df):
     return df
 
 
-def get_dataframe(spreadsheet_id, min_points, path):
+def get_dataframe(spreadsheet_id, path):
     """
     Gets the spreadsheet from the API, and returns the spreadsheet converted to a pd.DataFrame
     :param spreadsheet_id: the id of the spreadsheet
@@ -137,17 +137,17 @@ def get_dataframe(spreadsheet_id, min_points, path):
         df = pd.read_csv(path)
         df.columns = columns
         df = process_dataframe(df)
-        return df[df['total_points'] >= min_points]
+        return df
 
     print('Using API')
     data = spreadsheet_service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range='Sheet1').execute().get(
         'values')
     df = pd.DataFrame(data[1:], columns=columns)
     df = process_dataframe(df)
-    return df[df['total_points'] >= min_points]
+    return df
 
 
-def get_teams(df):
+def get_teams(df, min_points):
     """
     Gets all the unique teams in the dataframe
     :param df: DataFrame to get the teams from
@@ -155,7 +155,13 @@ def get_teams(df):
     """
     l = list(pd.unique(df['team_number']))
     l.sort()
-    return l
+
+    ret = []
+    for team in l:
+        if df[df['team_number'] == team]['total_points'].mean() >= min_points:
+            ret.append(team)
+
+    return ret
 
 
 sheetIds = []
@@ -334,9 +340,9 @@ def main():
     args = parser.parse_args()
 
     spreadsheet_id = '1wyS8yFLIZZdr23nP2SdYWx4bDEFCmUC611Rfd9_OUvM'
-    df = get_dataframe(spreadsheet_id, args.min_points, args.path)
+    df = get_dataframe(spreadsheet_id, args.path)
 
-    team_list = get_teams(df)
+    team_list = get_teams(df, args.min_points)
 
     colors = list(Color('orange').range_to(Color('grey'), len(team_list)))
 
@@ -347,7 +353,8 @@ def main():
 
         data_dict[team] = []
 
-        data = create_dict_dataframe(df, team)
+        data = create_dict_dataframe(df, team, args.min_points)
+
         worksheet = workbook.add_worksheet(str(team))
         write_data(team, data)
         write_qualitative_information(team, data)
