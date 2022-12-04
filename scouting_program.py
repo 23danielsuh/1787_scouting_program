@@ -123,16 +123,25 @@ def process_dataframe(init_df):
     return df
 
 
-def get_dataframe(spreadsheet_id, min_points):
+def get_dataframe(spreadsheet_id, min_points, path):
     """
     Gets the spreadsheet from the API, and returns the spreadsheet converted to a pd.DataFrame
     :param spreadsheet_id: the id of the spreadsheet
     :return: a pd.DataFrame of the data
     """
-    data = spreadsheet_service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range='Sheet1').execute().get(
-        'values')
     columns = ['time', 'email', 'name', 'team_number', 'qual_number', 'taxi', 'auto_upper_hub', 'auto_lower_hub',
                'teleop_upper_hub', 'teleop_lower_hub', 'climb', 'defense', 'written_information']
+
+    if path != 'USE_API':
+        print(f'Using CSV with path: {path}')
+        df = pd.read_csv(path)
+        df.columns = columns
+        df = process_dataframe(df)
+        return df[df['total_points'] >= min_points]
+
+    print('Using API')
+    data = spreadsheet_service.spreadsheets().values().get(spreadsheetId=spreadsheet_id, range='Sheet1').execute().get(
+        'values')
     df = pd.DataFrame(data[1:], columns=columns)
     df = process_dataframe(df)
     return df[df['total_points'] >= min_points]
@@ -321,10 +330,11 @@ def main():
     '''
     parser = argparse.ArgumentParser(description='Scouting Program for 1787')
     parser.add_argument('--min_points', type=int, help='only considers teams with total points higher than min_points (inclusive)', default=0)
+    parser.add_argument('--path', type=str, help='path to csv (probably somewhere in ~/Downloads). Defaults to using Sheets API.', default='USE_API')
     args = parser.parse_args()
 
     spreadsheet_id = '1wyS8yFLIZZdr23nP2SdYWx4bDEFCmUC611Rfd9_OUvM'
-    df = get_dataframe(spreadsheet_id, args.min_points)
+    df = get_dataframe(spreadsheet_id, args.min_points, args.path)
 
     team_list = get_teams(df)
 
