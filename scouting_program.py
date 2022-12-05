@@ -14,12 +14,16 @@ writer = pd.ExcelWriter('output.xlsx', engine='xlsxwriter')
 data_dict = defaultdict()
 
 
-def create_dict_dataframe(df, team_number, min_points):
+def create_dict_dataframe(df, team_number):
     """
     Takes a team number and generates a DataFrame of the scouting data from that team number
-    :param df: The DataFrame with all the data
-    :param team_number: The team number to get data for
-    :return: A pd.DataFrame of the data
+
+    Args:
+        df (pd.DataFrame): DataFrame with all the data
+        team_number (int): The team number to get data for
+
+    Returns:
+        pd.DataFrame: subset of df with the data
     """
     return df[df['team_number'] == team_number]
 
@@ -27,8 +31,12 @@ def create_dict_dataframe(df, team_number, min_points):
 def string_to_max(s):
     """
     Takes in a string of a list and returns the maximum of the list
-    :param s: string of a list
-    :return: maximum of the list
+
+    Args:
+        s (str): string of a list (n1, n2, n3, ...)
+
+    Returns:
+        int: maximum of the list
     """
     lst = s.split(', ')
     new_lst = []
@@ -42,8 +50,12 @@ def string_to_max(s):
 def assign_climb_points(x):
     """
     Assigns climb points for the spreadsheet text
-    :param x: text
-    :return: points
+
+    Args:
+        x (str): string with what the spreadsheet says
+
+    Returns:
+        int: number of climb points gained from climb
     """
     ret = 0
     if x == 'Traversal Rung (4)':
@@ -61,10 +73,14 @@ def assign_climb_points(x):
 def get_shooter_points(lower_hub, upper_hub, in_auto):
     """
     Gets the total number of points gathered
-    :param lower_hub: df.Column
-    :param upper_hub: df.Column
-    :param in_auto: bool
-    :return: int
+
+    Args:
+        lower_hub (int): number of balls scored in lower hub
+        upper_hub (int): number of balls scored in upper hub
+        in_auto (bool): boolean for if mode is auto or teleop
+
+    Returns:
+        int: total number of points scored
     """
     multiplier = (1, 2)
     if in_auto:
@@ -76,8 +92,12 @@ def get_shooter_points(lower_hub, upper_hub, in_auto):
 def process_dataframe(init_df):
     """
     Processes the DataFrame to be in a better format for use
-    :param init_df: DataFrame to format
-    :return: Formatted DataFrame
+
+    Args:
+        init_df (pd.DataFrame): DataFrame to format
+
+    Returns:
+        pd.DataFrame: Formatted DataFrame
     """
     df = init_df.drop(['email'], axis=1)
 
@@ -125,9 +145,14 @@ def process_dataframe(init_df):
 
 def get_dataframe(spreadsheet_id, path):
     """
-    Gets the spreadsheet from the API, and returns the spreadsheet converted to a pd.DataFrame
-    :param spreadsheet_id: the id of the spreadsheet
-    :return: a pd.DataFrame of the data
+    Turns a spreadsheet from a csv or sheets API into a Pandas DataFrame
+
+    Args:
+        spreadsheet_id (str): ID of the spreadsheet (check README.md for how to find this)
+        path (str): If path is 'USE_API', program will use API. Otherwise, it will use the provided path
+
+    Returns:   
+        pd.DataFrame: DataFrame created from the spreadsheet
     """
     columns = ['time', 'email', 'name', 'team_number', 'qual_number', 'taxi', 'auto_upper_hub', 'auto_lower_hub',
                'teleop_upper_hub', 'teleop_lower_hub', 'climb', 'defense', 'written_information']
@@ -149,10 +174,16 @@ def get_dataframe(spreadsheet_id, path):
 
 def get_teams(df, min_points):
     """
-    Gets all the unique teams in the dataframe
-    :param df: DataFrame to get the teams from
-    :return: list of the teams in sorted order
+    Gets all of the teams that meet a certain threshold of min_points
+
+    Args:
+        df (pd.DataFrame): DataFrame to get the teams from
+        min_points (int): minimum number of points for a team to be considered
+
+    Returns:
+        list: a list of the teams to be considered
     """
+
     l = list(pd.unique(df['team_number']))
     l.sort()
 
@@ -169,9 +200,11 @@ sheetIds = []
 
 def write_data(team, data):
     """
-    Writes in the raw data and the averages
-    :param team: Team to get the statistics from
-    :param data: DataFrame for the data
+    Writes data (point values) for a given team
+
+    Args:
+        team (int): team to write the data for
+        data (pd.DataFrame): DataFrame with data for the team
     """
 
     raw_data = data[['qual_number', 'total_auto_points', 'total_teleop_points', 'climb', 'total_points']]
@@ -201,8 +234,10 @@ def write_data(team, data):
 def write_qualitative_information(team, data):
     """
     Writes the qualitative information from the DataFrame (written information / who scouted it)
-    :param team: Team to get the statistics from
-    :param data: DataFrame for the data
+
+    Args:
+        team (int): team to write the data for
+        data (pd.DataFrame): DataFrame with data for the team
     """
     raw_data = data[['name', 'written_information']]
 
@@ -214,16 +249,21 @@ def write_qualitative_information(team, data):
 def write_statistics(team, data):
     """
     Writes the statistics (defense percentage, an LSRL slope, and a p-value from a t-test
-    :param team: Team to get the statistics from
-    :param data: DataFrame for the data
+
+    Args:
+        team (int): team to write the data for
+        data (pd.DataFrame): DataFrame with data for the team
     """
     columns = ['Defense Percentage', 'LSRL Slope',
                'T-test']
+    # calculates percent of time doing defense to 2 decimal places
     defense_percentage = round(len(data['total_points'][data['defense'] == 'yes']) * 100 / len(data['defense']), 2)
 
+    # LSRL slope using scipy
     slope, _, _, _, _ = stats.linregress(range(0, len(data['total_points'])), data['total_points'])
     slope = round(slope, 5)
 
+    # p-value from independent t-test 
     p_value = np.NaN
     if len(pd.unique(data['time'])) != 1:
         p_value = round(stats.ttest_ind(data['total_points'][data['time'] == 1],
@@ -231,6 +271,7 @@ def write_statistics(team, data):
 
     df = pd.DataFrame([[defense_percentage, slope, p_value]], columns=columns)
 
+    # writes data
     df.to_excel(writer, sheet_name=str(team), index=False, startrow=len(data) + 4, startcol=1)
 
     data_dict[team].append(defense_percentage)
@@ -240,12 +281,13 @@ def write_statistics(team, data):
 
 def write_graphs(team, data):
     """
-    Write the graphs from a team's data (line graphs for points, pie chart for climb, and bar for 2-day)
+    Writes the statistics (defense percentage, an LSRL slope, and a p-value from a t-test)
 
     Args:
-        team (int): team number to get the data from
-        data (pd.DataFrame): DataFrame to get the data
+        team (int): team to write the data for
+        data (pd.DataFrame): DataFrame with data for the team
     """
+
     # i have no idea how this code works, but if you remove some of it, it stops working so don't change it
     workbook1 = writer.book
     worksheet1 = writer.sheets[str(team)]
@@ -259,7 +301,7 @@ def write_graphs(team, data):
     titles = ['Total Auto Points', 'Total Teleop Points', 'Climb Distribution', 'Total Points Scored', 'Day 1 vs. Day 2 (Total Points)']
     positions = [(max_row + 7, 0), (max_row + 7, 5), (max_row + 7 + 16, 0), (max_row + 7 + 16, 5), (max_row + 7 + 16 + 16, 2)]
 
-    # xlsxwriter is annoying, you can't pass in values, so you're forced to create new entries
+    # xlsxwriter is annoying, you can't pass in values, so you're forced to create new entries off-screen
     worksheet1.write(0, 24, 'No hang (0)')
     worksheet1.write(1, 24, 'Low bar (4)')
     worksheet1.write(2, 24, 'Middle bar (6)')
@@ -334,6 +376,8 @@ def main():
     '''
     runs the program
     '''
+    
+    # adds flags
     parser = argparse.ArgumentParser(description='Scouting Program for 1787')
     parser.add_argument('--min_points', type=int, help='only considers teams with total points higher than min_points (inclusive)', default=0)
     parser.add_argument('--path', type=str, help='path to csv (probably somewhere in ~/Downloads). Defaults to using Sheets API.', default='USE_API')
@@ -348,6 +392,7 @@ def main():
 
     rankings_worksheet = workbook.add_worksheet('rankings') 
 
+    # writes data for each team
     for i, team in enumerate(team_list):
         print(f'processing team {team}')
 
@@ -379,7 +424,7 @@ def main():
 
     rankings = pd.DataFrame()
     rankings['#'] = range(1, len(team_list) + 1)
-    for i, column in enumerate(columns):
+    for i, column in enumerate(columns): # df -> df subset -> df????
         temp_df = pd.DataFrame()
         temp_df[f'Team{i}'] = team_list
         temp_df[column] = ranking_data[column].values
