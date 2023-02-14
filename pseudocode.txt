@@ -1,0 +1,33 @@
+read dataframe and process data to good format
+map every team number to the corresponding data
+
+
+dataframe:
+    name
+    auto:
+        low, mid, upper
+    teleop:
+        low, mid, upper
+    total points
+    cycles
+    balancing information
+    defense
+    additional notes
+
+
+final output:
+    team number, points scored, points scored in auto, charge station points, number of cycles, defense, links
+
+
+on each team page:
+    average everything
+    bar graph with 3 bins of low mid and high for every match
+    pie chart for unbalanced, balanced, and none for auto
+    pie chart for unbalanced, balanced, and none for teleop
+    pie chart for defense
+    something about links
+    copy from previous thing
+
+
+maybe do:
+    grab data from tba to see how much percentage they carried the team
