@@ -6,6 +6,7 @@ from colour import Color
 import numpy as np
 
 
+
 def get_total_points(df):
     aggregate_columns = [
         "auto_points",
@@ -169,7 +170,56 @@ def get_statistics(df, teams):
             .round(2)
         )
 
-    return stats_df
+        slope, _, _, _, _ = stats.linregress(
+            range(0, len(df["total_points"])), df["total_points"]
+        )
+        slope = round(slope, 4)
+
+        p_value = np.NaN
+        if len(pd.unique(df["timestamp"])) != 1:
+            p_value = round(
+                stats.ttest_ind(
+                    df["total_points"][df["timestamp"] == 1],
+                    df["total_points"][df["timestamp"] == 2],
+                ).pvalue,
+                7,
+            )        
+
+        defense_percentage = round(
+            len(df[df["defense"] == "Yes"]) * 100
+            / len(df["defense"]),
+            2,
+        )
+
+        stats_df['lsrl_slope'] = slope
+        stats_df['p_value'] = p_value
+        stats_df['defense_percentage'] = defense_percentage
+
+    formatted_columns = [
+        "Average Total Points",
+        "Average Auto Points",
+        "Average Number of Cycles",
+        "Average Charge Station Points",
+        "LSRL Slope",
+        "Defense Percentage",
+        "P-value",
+    ]
+
+    rankings = pd.DataFrame()
+    rankings["#"] = range(1, len(teams) + 1)
+    for i, column in enumerate(stats_columns):
+        # we don't need the team # column
+        if i == 0:
+            continue
+
+        temp_df = pd.DataFrame()
+        temp_df[f'Team{i}'] = teams
+        temp_df[formatted_columns[i - 1]] = stats_df[column].values
+        # temp_df[formatted_columns[i - 1]] = temp_df[formatted_columns[i - 1]].astype(int)
+        temp_df = temp_df.sort_values(by=[formatted_columns[i - 1]], ascending=(column == 'p_value'), ignore_index=True)
+        rankings = pd.concat([rankings, temp_df], axis=1, sort=False)
+
+    return rankings, stats_df
 
 
 def process_args():
@@ -195,16 +245,38 @@ def process_args():
     return args
 
 
+def create_spreadsheet(teams, df, stats_df, rankings):
+    colors = list(Color("orange").range_to(Color("grey"), len(teams)))
+    workbook = xlsxwriter.Workbook('output.xlsx')
+    writer = pd.ExcelWriter("output.xlsx", engine="xlsxwriter")
+    stats_worksheet = workbook.add_worksheet("rankings")
+
+    print(rankings.head())
+    rankings.to_excel(writer, sheet_name="rankings", index=False, startrow=0, startcol=0)
+
+    cell_format = writer.book.add_format(
+        {"bg_color": "#FFD580", "border": 1, "valign": "center"}
+    )
+
+    for i in range(2, 16, 2):
+        writer.sheets["rankings"].set_column(i, i, cell_format=cell_format, width=20)
+
+    for team in teams:
+
+
+    writer.save()
+
+
 def main():
     # adds flags
     args = process_args()
 
     teams, df = get_team_dfs(args.path, args.min_points)
     df.to_csv("info.csv")
-    stats_df = get_statistics(df, teams)
+    rankings_df, stats_df = get_statistics(df, teams)
     stats_df.to_csv("stats.csv")
 
-    colors = list(Color("orange").range_to(Color("grey"), len(df)))
+    create_spreadsheet(teams, df, stats_df, rankings_df)
 
 
 if __name__ == "__main__":

@@ -14,6 +14,9 @@ dataframe:
     defense ✅
     additional notes ✅
 
+statistics:
+    average 
+
 
 test:
 timestamp            int64
