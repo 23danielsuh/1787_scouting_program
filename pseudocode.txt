@@ -3,16 +3,48 @@ map every team number to the corresponding data
 
 
 dataframe:
-    name
+    name ✅
     auto:
-        low, mid, upper
+        low, mid, upper ✅
     teleop:
-        low, mid, upper
-    total points
-    cycles
-    balancing information
-    defense
-    additional notes
+        low, mid, upper ✅
+    total points ✅
+    cycles ✅
+    balancing information ✅
+    defense ✅
+    additional notes ✅
+
+
+test:
+timestamp            int64
+name                object
+team_number          int64
+match_number         int64
+leave_community     object
+auto_cone_high       int64
+auto_cone_mid        int64
+auto_cone_low        int64
+auto_cube_high       int64
+auto_cube_mid        int64
+auto_cube_low        int64
+auto_balance        object
+tele_cone_high       int64
+tele_cone_mid        int64
+tele_cone_low        int64
+tele_cube_high       int64
+tele_cube_mid        int64
+tele_cube_low        int64
+tele_balance        object
+defense             object
+num_links            int64
+comments            object
+auto_points        float64
+total_points       float64
+num_cycles         float64
+
+timestamp  name    team_number  match_number  leave_community  auto_cone_high  auto_cone_mid  auto_cone_low  auto_cube_high  auto_cube_mid  auto_cube_low  auto_balance  tele_cone_high  tele_cone_mid  tele_cone_low  tele_cube_high  tele_cube_mid  tele_cube_low  tele_balance  defense  num_links  comments                 auto_points  total_points  num_cycles
+1          ben     1787         2             Yes              0               0              0              0               0              0              none          2               0              0              0               0              0              none          Yes      1          ontehu                   0.0          10.0          2.0           1
+           daniel  1787         1             Yes              2               0              0              0               0              0              balanced      5               0              0              3               0              0              balanced      No       5          oeunthoentuhoenthutnoeu  12.0         52.0          8.0           1
 
 
 final output:
