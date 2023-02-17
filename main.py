@@ -57,13 +57,17 @@ def get_total_points(df):
         else:
             ret_df["num_cycles"] += 1 * column
 
-        if "cone" in name:
-            ret_df["cone_points"] += score * column
-        if "cube" in name:
-            ret_df["cube_points"] += score * column
+        if "tele" in name:
+            if "cone" in name:
+                ret_df["cone_points"] += score * column
+            if "cube" in name:
+                ret_df["cube_points"] += score * column
 
         ret_df["total_points"] += score * column
 
+    df["leave_community"] = df["leave_community"].replace({"Yes": 3, "No": 0})
+    ret_df["total_points"] += df["leave_community"]
+    ret_df["auto_points"] += df["leave_community"]
     ret_df["total_points"] += df["auto_balance"] + df["tele_balance"]
     ret_df["auto_points"] += df["auto_balance"]
     ret_df["tele_points"] = ret_df["total_points"] - ret_df["auto_points"]
@@ -166,6 +170,7 @@ def get_team_dfs(path, min_points):
 
 def get_rankings(df, teams):
     stats_columns = [
+        "team_number",
         "average_total_points",
         "average_auto_points",
         "average_num_cycles",
@@ -174,13 +179,13 @@ def get_rankings(df, teams):
         "defense_percentage",
         "p_value",
     ]
-    stats_df = pd.DataFrame(
-        np.zeros((len(teams), len(stats_columns))), columns=stats_columns
-    )
+    stats_df = pd.DataFrame(columns=stats_columns)
 
     for team in teams:
-        stats_df["team_number"] = team
-        stats_df[
+        cur_df = pd.DataFrame(columns=stats_columns)
+
+        cur_df["team_number"] = [team]
+        cur_df[
             [
                 "average_total_points",
                 "average_auto_points",
@@ -196,7 +201,8 @@ def get_rankings(df, teams):
         )
 
         slope, _, _, _, _ = stats.linregress(
-            range(0, len(df["total_points"])), df["total_points"]
+            range(0, len(df.loc[df["team_number"] == team]["total_points"])),
+            df.loc[df["team_number"] == team]["total_points"],
         )
         slope = round(slope, 4)
 
@@ -204,20 +210,30 @@ def get_rankings(df, teams):
         if len(pd.unique(df["timestamp"])) != 1:
             p_value = round(
                 stats.ttest_ind(
-                    df["total_points"][df["timestamp"] == 1],
-                    df["total_points"][df["timestamp"] == 2],
+                    df.loc[df["team_number"] == team]["total_points"][
+                        df["timestamp"] == 1
+                    ],
+                    df.loc[df["team_number"] == team]["total_points"][
+                        df["timestamp"] == 2
+                    ],
                 ).pvalue,
                 7,
             )
 
         defense_percentage = round(
-            len(df[df["defense"] == "Yes"]) * 100 / len(df["defense"]),
+            len(df.loc[(df["team_number"] == team) & (df["defense"] == "Yes")])
+            * 100
+            / len(df.loc[df["team_number"] == team]["defense"]),
             2,
         )
 
-        stats_df["lsrl_slope"] = slope
-        stats_df["p_value"] = p_value
-        stats_df["defense_percentage"] = defense_percentage
+        cur_df["lsrl_slope"] = [slope]
+        cur_df["p_value"] = [p_value]
+        cur_df["defense_percentage"] = [defense_percentage]
+
+        stats_df = pd.concat([stats_df, cur_df])
+
+    stats_df.to_csv("a.csv")
 
     formatted_columns = [
         "Total Points",
@@ -232,11 +248,13 @@ def get_rankings(df, teams):
     rankings = pd.DataFrame()
     rankings["#"] = range(1, len(teams) + 1)
     for i, column in enumerate(stats_columns):
+        if i == 0:
+            continue
         temp_df = pd.DataFrame()
         temp_df[f"Team{i}"] = teams
-        temp_df[formatted_columns[i]] = stats_df[column].values
+        temp_df[formatted_columns[i - 1]] = stats_df[column].values
         temp_df = temp_df.sort_values(
-            by=[formatted_columns[i]],
+            by=[formatted_columns[i - 1]],
             ascending=(column == "p_value"),
             ignore_index=True,
         )
@@ -317,13 +335,14 @@ def create_spreadsheet(teams, df, stats_df, rankings):
 
     stats_columns = ["lsrl_slope", "defense_percentage", "p_value"]
 
-    formatted_stats_columns = ["LSRL Slope", "Defense Percentage", "P-value"]
+    formatted_stats_columns = ["LSRL Slope", "Defense %", "P-value"]
 
     written_columns = ["name", "comments"]
 
     formatted_written_columns = ["Name", "Comments"]
 
     for team in teams:
+        print(f"processing team {team}")
         # data side of stuff
         averages = df.loc[df["team_number"] == team][data_columns].mean(axis=0).round(2)
         averages = pd.DataFrame(averages).transpose()
@@ -332,7 +351,9 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         left_hand_column = [""] * (len(df.loc[df["team_number"] == team]) + 1)
         left_hand_column[-1] = "Averages:"
 
-        team_data_df = pd.concat([df[data_columns], averages], axis=0)
+        team_data_df = pd.concat(
+            [df.loc[df["team_number"] == team][data_columns], averages], axis=0
+        )
         team_data_df.columns = formatted_data_columns
         team_data_df.insert(0, "", left_hand_column, True)
 
@@ -346,7 +367,7 @@ def create_spreadsheet(teams, df, stats_df, rankings):
             writer.sheets[str(team)].set_column(i, i, width=12)
 
         # qualitative info stuff
-        team_written_df = df[written_columns]
+        team_written_df = df.loc[df["team_number"] == team][written_columns]
         team_written_df.columns = formatted_written_columns
         team_written_df.to_excel(
             writer,
@@ -355,6 +376,7 @@ def create_spreadsheet(teams, df, stats_df, rankings):
             startrow=0,
             startcol=len(data_columns) + 2,
         )
+        writer.sheets[str(team)].set_column(len(data_columns) + 3, len(data_columns) + 3, width=150)
 
         # stats stuff
         team_stats_df = stats_df[stats_columns]
@@ -373,20 +395,21 @@ def create_spreadsheet(teams, df, stats_df, rankings):
 
         worksheet1.write(7, 49, "Points")
 
-        num_data_points = len(df.loc[df['team_number'] == team])
-        cur_team = df.loc[df['team_number'] == team]
+        num_data_points = len(df.loc[df["team_number"] == team])
+        cur_team = df.loc[df["team_number"] == team]
 
         # chart 1: line graph of the total points
-        for i, points in enumerate(df.loc[df['team_number'] == team]['total_points']):
-            print(points)
+        for i, points in enumerate(df.loc[df["team_number"] == team]["total_points"]):
             worksheet1.write(i, 50, points)
 
         chart = workbook1.add_chart({"type": "line", "subtype": "stacked"})
-        chart.add_series({
-            "name": [str(team), 7, 49],
-            "values": [str(team), 0, 50, num_data_points - 1, 50],
-            "line": {"color": 'blue'}
-        })
+        chart.add_series(
+            {
+                "name": [str(team), 7, 49],
+                "values": [str(team), 0, 50, num_data_points - 1, 50],
+                "line": {"color": "blue"},
+            }
+        )
 
         chart.set_x_axis({"name": "Match #"})
         chart.set_y_axis({"name": "Total Points"})
@@ -396,12 +419,12 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         worksheet1.insert_chart(len(team_data_df) + 3, 5, chart)
 
         # chart 2: pie graph with low, mid, high
-        worksheet1.write(0, 51, 'High')
-        worksheet1.write(1, 51, 'Mid')
-        worksheet1.write(2, 51, 'Low')
-        worksheet1.write(0, 52, cur_team['high_cycles'].sum())
-        worksheet1.write(1, 52, cur_team['mid_cycles'].sum())
-        worksheet1.write(2, 52, cur_team['low_cycles'].sum())
+        worksheet1.write(0, 51, "High")
+        worksheet1.write(1, 51, "Mid")
+        worksheet1.write(2, 51, "Low")
+        worksheet1.write(0, 52, cur_team["high_cycles"].sum())
+        worksheet1.write(1, 52, cur_team["mid_cycles"].sum())
+        worksheet1.write(2, 52, cur_team["low_cycles"].sum())
 
         chart = workbook1.add_chart({"type": "pie"})
         chart.add_series(
@@ -414,14 +437,14 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         chart.set_title({"name": "Placement of Game Pieces"})
 
         worksheet1.insert_chart(len(team_data_df) + 3, 11, chart)
-        
+
         # chart 3: pie chart of auto balancing distribution
-        worksheet1.write(0, 53, 'Docked (Engaged)')
-        worksheet1.write(1, 53, 'Docked (Not Engaged)')
-        worksheet1.write(2, 53, 'None')
-        worksheet1.write(0, 54, len(cur_team.loc[cur_team['auto_balance'] == 12]))
-        worksheet1.write(1, 54, len(cur_team.loc[cur_team['auto_balance'] == 8]))
-        worksheet1.write(2, 54, len(cur_team.loc[cur_team['auto_balance'] == 0]))
+        worksheet1.write(0, 53, "Docked (Engaged)")
+        worksheet1.write(1, 53, "Docked (Not Engaged)")
+        worksheet1.write(2, 53, "None")
+        worksheet1.write(0, 54, len(cur_team.loc[cur_team["auto_balance"] == 12]))
+        worksheet1.write(1, 54, len(cur_team.loc[cur_team["auto_balance"] == 8]))
+        worksheet1.write(2, 54, len(cur_team.loc[cur_team["auto_balance"] == 0]))
 
         chart = workbook1.add_chart({"type": "pie"})
         chart.add_series(
@@ -434,14 +457,14 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         chart.set_title({"name": "Autonomous Balancing Distribution"})
 
         worksheet1.insert_chart(len(team_data_df) + 3 + 16, 5, chart)
-        
+
         # chart 4: pie chart of tele balancing distribution
-        worksheet1.write(0, 55, 'Docked (Engaged)')
-        worksheet1.write(1, 55, 'Docked (Not Engaged)')
-        worksheet1.write(2, 55, 'None')
-        worksheet1.write(0, 56, len(cur_team.loc[cur_team['tele_balance'] == 10]))
-        worksheet1.write(1, 56, len(cur_team.loc[cur_team['tele_balance'] == 6]))
-        worksheet1.write(2, 56, len(cur_team.loc[cur_team['tele_balance'] == 0]))
+        worksheet1.write(0, 55, "Docked (Engaged)")
+        worksheet1.write(1, 55, "Docked (Not Engaged)")
+        worksheet1.write(2, 55, "None")
+        worksheet1.write(0, 56, len(cur_team.loc[cur_team["tele_balance"] == 10]))
+        worksheet1.write(1, 56, len(cur_team.loc[cur_team["tele_balance"] == 6]))
+        worksheet1.write(2, 56, len(cur_team.loc[cur_team["tele_balance"] == 0]))
 
         chart = workbook1.add_chart({"type": "pie"})
         chart.add_series(
@@ -456,12 +479,12 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         worksheet1.insert_chart(len(team_data_df) + 3 + 16, 11, chart)
 
         # chart 5: pie chart for defense
-        worksheet1.write(0, 57, 'Offense')
-        worksheet1.write(1, 57, 'Not Sure')
-        worksheet1.write(2, 57, 'Defense')
-        worksheet1.write(0, 58, len(cur_team.loc[cur_team['defense'] == 'Yes']))
-        worksheet1.write(1, 58, len(cur_team.loc[cur_team['defense'] == 'No']))
-        worksheet1.write(2, 58, len(cur_team.loc[cur_team['defense'] == 'Not sure']))
+        worksheet1.write(0, 57, "Offense")
+        worksheet1.write(1, 57, "Not Sure")
+        worksheet1.write(2, 57, "Defense")
+        worksheet1.write(0, 58, len(cur_team.loc[cur_team["defense"] == "Yes"]))
+        worksheet1.write(1, 58, len(cur_team.loc[cur_team["defense"] == "No"]))
+        worksheet1.write(2, 58, len(cur_team.loc[cur_team["defense"] == "Not sure"]))
 
         chart = workbook1.add_chart({"type": "pie"})
         chart.add_series(
@@ -478,10 +501,18 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         # chart 6: day 1 vs. day 2
         worksheet1.write(0, 59, "Day 1")
         worksheet1.write(1, 59, "Day 2")
-        worksheet1.write(0, 60, df.loc[(df["timestamp"] == 1) & (df["team_number"] == team)]['total_points'].mean(axis=0))
+        worksheet1.write(
+            0,
+            60,
+            df.loc[(df["timestamp"] == 1) & (df["team_number"] == team)][
+                "total_points"
+            ].mean(),
+        )
         average_day2 = 0
         if len(df.loc[(df["timestamp"] == 2) & (df["team_number"] == team)]) != 0:
-            average_day2 = df.loc[(df["timestamp"] == 2) & (df["team_number"] == team)]['total_points'].mean(axis=0)
+            average_day2 = df.loc[(df["timestamp"] == 2) & (df["team_number"] == team)][
+                "total_points"
+            ].mean()
         worksheet1.write(1, 60, average_day2)
 
         chart = workbook1.add_chart({"type": "column"})
@@ -505,6 +536,7 @@ def main():
     args = process_args()
 
     teams, df = get_team_dfs(args.path, args.min_points)
+    teams.sort()
     df.to_csv("info.csv")
     rankings_df, stats_df = get_rankings(df, teams)
     stats_df.to_csv("stats.csv")

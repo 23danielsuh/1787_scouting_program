@@ -1,3 +1,7 @@
 ,timestamp,name,team_number,match_number,leave_community,auto_cone_high,auto_cone_mid,auto_cone_low,auto_cube_high,auto_cube_mid,auto_cube_low,auto_balance,tele_cone_high,tele_cone_mid,tele_cone_low,tele_cube_high,tele_cube_mid,tele_cube_low,tele_balance,defense,num_links,comments,total_points,tele_points,auto_points,num_cycles,charge_station_points,high_points,mid_points,low_points,high_cycles,mid_cycles,low_cycles,cone_points,cube_points
-0,1,daniel,1787,1,Yes,2,0,0,0,0,0,12,5,0,0,3,0,0,10,No,5,oeunthoentuhoenthutnoeu,74.0,50.0,24.0,8.0,22.0,50.0,0.0,0.0,8.0,0.0,0.0,37.0,15.0
-1,1,ben,1787,2,Yes,0,0,0,0,0,0,0,2,0,0,0,0,0,0,Yes,1,ontehu,10.0,10.0,0.0,2.0,0.0,10.0,0.0,0.0,2.0,0.0,0.0,10.0,0.0
+0,1,daniel,1787,1,3,2,0,0,0,0,0,12,5,0,0,3,0,0,10,No,5,oeunthoentuhoenthutnoeu,77.0,50.0,27.0,8.0,22.0,50.0,0.0,0.0,8.0,0.0,0.0,25.0,15.0
+1,1,ben,1787,2,3,0,0,0,0,0,0,0,2,0,0,0,0,0,0,Yes,1,ontehu,13.0,10.0,3.0,2.0,0.0,10.0,0.0,0.0,2.0,0.0,0.0,10.0,0.0
+2,1,truman,27,1,3,4,0,0,0,0,0,12,8,0,0,5,5,3,10,No,5,oenhtuohtnecroei,135.0,96.0,39.0,21.0,22.0,85.0,15.0,6.0,13.0,5.0,3.0,40.0,46.0
+3,1,daniel,27,2,3,4,0,0,0,0,0,12,7,3,2,2,5,3,10,No,5,;ekuehiuhehi,128.0,89.0,39.0,22.0,22.0,65.0,24.0,10.0,9.0,8.0,5.0,48.0,31.0
+4,1,daniel,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,Yes,4,yduihuih,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+5,1,test,0,2,3,1,0,0,0,0,0,0,0,2,0,1,0,0,6,No,2,uqtfjqhpydy;.,26.0,17.0,9.0,3.0,6.0,10.0,6.0,0.0,1.0,2.0,0.0,6.0,5.0
