@@ -5,6 +5,8 @@ import xlsxwriter
 from colour import Color
 import numpy as np
 
+# this is probably the worst code i've ever written in my life but if it works it works
+
 
 def get_total_points(df):
     aggregate_columns = [
@@ -16,6 +18,9 @@ def get_total_points(df):
         "high_points",
         "mid_points",
         "low_points",
+        "high_cycles",
+        "mid_cycles",
+        "low_cycles",
         "cone_points",
         "cube_points",
     ]
@@ -33,12 +38,18 @@ def get_total_points(df):
         if "high" in name:
             score = 5
             ret_df["high_points"] += score * column
+            if "tele" in name:
+                ret_df["high_cycles"] += column
         if "mid" in name:
             score = 3
             ret_df["mid_points"] += score * column
+            if "tele" in name:
+                ret_df["mid_cycles"] += column
         if "low" in name:
             score = 2
             ret_df["low_points"] += score * column
+            if "tele" in name:
+                ret_df["low_cycles"] += column
 
         if "auto" in name:
             score += 1
@@ -337,14 +348,154 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         # qualitative info stuff
         team_written_df = df[written_columns]
         team_written_df.columns = formatted_written_columns
-        team_written_df.to_excel(writer, sheet_name=str(team), index=False, startrow=0, startcol=len(data_columns) + 2)
+        team_written_df.to_excel(
+            writer,
+            sheet_name=str(team),
+            index=False,
+            startrow=0,
+            startcol=len(data_columns) + 2,
+        )
 
         # stats stuff
         team_stats_df = stats_df[stats_columns]
         team_stats_df.columns = formatted_stats_columns
-        team_stats_df.to_excel(writer, sheet_name=str(team), index=False, startrow=len(team_data_df)+3, startcol=0)
+        team_stats_df.to_excel(
+            writer,
+            sheet_name=str(team),
+            index=False,
+            startrow=len(team_data_df) + 3,
+            startcol=0,
+        )
 
         # TODO: add charts
+        workbook1 = writer.book
+        worksheet1 = writer.sheets[str(team)]
+
+        worksheet1.write(7, 49, "Points")
+
+        num_data_points = len(df.loc[df['team_number'] == team])
+        cur_team = df.loc[df['team_number'] == team]
+
+        # chart 1: line graph of the total points
+        for i, points in enumerate(df.loc[df['team_number'] == team]['total_points']):
+            print(points)
+            worksheet1.write(i, 50, points)
+
+        chart = workbook1.add_chart({"type": "line", "subtype": "stacked"})
+        chart.add_series({
+            "name": [str(team), 7, 49],
+            "values": [str(team), 0, 50, num_data_points - 1, 50],
+            "line": {"color": 'blue'}
+        })
+
+        chart.set_x_axis({"name": "Match #"})
+        chart.set_y_axis({"name": "Total Points"})
+
+        chart.set_title({"name": "Total Points"})
+
+        worksheet1.insert_chart(len(team_data_df) + 3, 5, chart)
+
+        # chart 2: pie graph with low, mid, high
+        worksheet1.write(0, 51, 'High')
+        worksheet1.write(1, 51, 'Mid')
+        worksheet1.write(2, 51, 'Low')
+        worksheet1.write(0, 52, cur_team['high_cycles'].sum())
+        worksheet1.write(1, 52, cur_team['mid_cycles'].sum())
+        worksheet1.write(2, 52, cur_team['low_cycles'].sum())
+
+        chart = workbook1.add_chart({"type": "pie"})
+        chart.add_series(
+            {
+                "categories": [str(team), 0, 51, 2, 51],
+                "values": [str(team), 0, 52, 2, 52],
+            }
+        )
+
+        chart.set_title({"name": "Placement of Game Pieces"})
+
+        worksheet1.insert_chart(len(team_data_df) + 3, 11, chart)
+        
+        # chart 3: pie chart of auto balancing distribution
+        worksheet1.write(0, 53, 'Docked (Engaged)')
+        worksheet1.write(1, 53, 'Docked (Not Engaged)')
+        worksheet1.write(2, 53, 'None')
+        worksheet1.write(0, 54, len(cur_team.loc[cur_team['auto_balance'] == 12]))
+        worksheet1.write(1, 54, len(cur_team.loc[cur_team['auto_balance'] == 8]))
+        worksheet1.write(2, 54, len(cur_team.loc[cur_team['auto_balance'] == 0]))
+
+        chart = workbook1.add_chart({"type": "pie"})
+        chart.add_series(
+            {
+                "categories": [str(team), 0, 53, 2, 53],
+                "values": [str(team), 0, 54, 2, 54],
+            }
+        )
+
+        chart.set_title({"name": "Autonomous Balancing Distribution"})
+
+        worksheet1.insert_chart(len(team_data_df) + 3 + 16, 5, chart)
+        
+        # chart 4: pie chart of tele balancing distribution
+        worksheet1.write(0, 55, 'Docked (Engaged)')
+        worksheet1.write(1, 55, 'Docked (Not Engaged)')
+        worksheet1.write(2, 55, 'None')
+        worksheet1.write(0, 56, len(cur_team.loc[cur_team['tele_balance'] == 10]))
+        worksheet1.write(1, 56, len(cur_team.loc[cur_team['tele_balance'] == 6]))
+        worksheet1.write(2, 56, len(cur_team.loc[cur_team['tele_balance'] == 0]))
+
+        chart = workbook1.add_chart({"type": "pie"})
+        chart.add_series(
+            {
+                "categories": [str(team), 0, 55, 2, 55],
+                "values": [str(team), 0, 56, 2, 56],
+            }
+        )
+
+        chart.set_title({"name": "Teleoperated Balancing Distribution"})
+
+        worksheet1.insert_chart(len(team_data_df) + 3 + 16, 11, chart)
+
+        # chart 5: pie chart for defense
+        worksheet1.write(0, 57, 'Offense')
+        worksheet1.write(1, 57, 'Not Sure')
+        worksheet1.write(2, 57, 'Defense')
+        worksheet1.write(0, 58, len(cur_team.loc[cur_team['defense'] == 'Yes']))
+        worksheet1.write(1, 58, len(cur_team.loc[cur_team['defense'] == 'No']))
+        worksheet1.write(2, 58, len(cur_team.loc[cur_team['defense'] == 'Not sure']))
+
+        chart = workbook1.add_chart({"type": "pie"})
+        chart.add_series(
+            {
+                "categories": [str(team), 0, 57, 2, 57],
+                "values": [str(team), 0, 58, 2, 58],
+            }
+        )
+
+        chart.set_title({"name": "Defense Distribution"})
+
+        worksheet1.insert_chart(len(team_data_df) + 3 + 16 + 16, 5, chart)
+
+        # chart 6: day 1 vs. day 2
+        worksheet1.write(0, 59, "Day 1")
+        worksheet1.write(1, 59, "Day 2")
+        worksheet1.write(0, 60, df.loc[(df["timestamp"] == 1) & (df["team_number"] == team)]['total_points'].mean(axis=0))
+        average_day2 = 0
+        if len(df.loc[(df["timestamp"] == 2) & (df["team_number"] == team)]) != 0:
+            average_day2 = df.loc[(df["timestamp"] == 2) & (df["team_number"] == team)]['total_points'].mean(axis=0)
+        worksheet1.write(1, 60, average_day2)
+
+        chart = workbook1.add_chart({"type": "column"})
+
+        chart.add_series(
+            {
+                "categories": [str(team), 0, 59, 1, 59],
+                "values": [str(team), 0, 60, 1, 60],
+                "name": [str(team), 7, 49],
+            }
+        )
+
+        chart.set_title({"name": "Day 1 vs. Day 2"})
+        worksheet1.insert_chart(len(team_data_df) + 3 + 16 + 16, 5 + 6, chart)
 
     writer.save()
 
