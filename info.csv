@@ -1,3 +1,3 @@
-,timestamp,name,team_number,match_number,leave_community,auto_cone_high,auto_cone_mid,auto_cone_low,auto_cube_high,auto_cube_mid,auto_cube_low,auto_balance,tele_cone_high,tele_cone_mid,tele_cone_low,tele_cube_high,tele_cube_mid,tele_cube_low,tele_balance,defense,num_links,comments,auto_points,total_points,num_cycles,charge_station_points
-0,1,daniel,1787,1,Yes,2,0,0,0,0,0,12,5,0,0,3,0,0,10,No,5,oeunthoentuhoenthutnoeu,24.0,74.0,8.0,22.0
-1,1,ben,1787,2,Yes,0,0,0,0,0,0,0,2,0,0,0,0,0,0,Yes,1,ontehu,0.0,10.0,2.0,0.0
+,timestamp,name,team_number,match_number,leave_community,auto_cone_high,auto_cone_mid,auto_cone_low,auto_cube_high,auto_cube_mid,auto_cube_low,auto_balance,tele_cone_high,tele_cone_mid,tele_cone_low,tele_cube_high,tele_cube_mid,tele_cube_low,tele_balance,defense,num_links,comments,total_points,tele_points,auto_points,num_cycles,charge_station_points,high_points,mid_points,low_points,cone_points,cube_points
+0,1,daniel,1787,1,Yes,2,0,0,0,0,0,12,5,0,0,3,0,0,10,No,5,oeunthoentuhoenthutnoeu,74.0,50.0,24.0,8.0,22.0,50.0,0.0,0.0,37.0,15.0
+1,1,ben,1787,2,Yes,0,0,0,0,0,0,0,2,0,0,0,0,0,0,Yes,1,ontehu,10.0,10.0,0.0,2.0,0.0,10.0,0.0,0.0,10.0,0.0

@@ -1,2 +1,2 @@
-,team_number,average_total_points,average_auto_points,average_num_cycles,average_charge_station_points,lsrl_slope,defense_percentage,p_value
-0,1787,42.0,12.0,5.0,11.0,-64.0,50.0,
+,average_total_points,average_auto_points,average_num_cycles,average_charge_station_points,lsrl_slope,defense_percentage,p_value,team_number
+0,42.0,12.0,5.0,11.0,-64.0,50.0,,1787

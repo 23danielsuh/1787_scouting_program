@@ -6,13 +6,18 @@ from colour import Color
 import numpy as np
 
 
-
 def get_total_points(df):
     aggregate_columns = [
-        "auto_points",
         "total_points",
+        "tele_points",
+        "auto_points",
         "num_cycles",
         "charge_station_points",
+        "high_points",
+        "mid_points",
+        "low_points",
+        "cone_points",
+        "cube_points",
     ]
     ret_df = pd.DataFrame(
         np.zeros((len(df), len(aggregate_columns))), columns=aggregate_columns
@@ -27,10 +32,13 @@ def get_total_points(df):
 
         if "high" in name:
             score = 5
+            ret_df["high_points"] += score * column
         if "mid" in name:
             score = 3
+            ret_df["mid_points"] += score * column
         if "low" in name:
             score = 2
+            ret_df["low_points"] += score * column
 
         if "auto" in name:
             score += 1
@@ -38,16 +46,23 @@ def get_total_points(df):
         else:
             ret_df["num_cycles"] += 1 * column
 
+        if "cone" in name:
+            ret_df["cone_points"] += score * column
+        if "cube" in name:
+            ret_df["cube_points"] += score * column
+
         ret_df["total_points"] += score * column
 
     ret_df["total_points"] += df["auto_balance"] + df["tele_balance"]
     ret_df["auto_points"] += df["auto_balance"]
+    ret_df["tele_points"] = ret_df["total_points"] - ret_df["auto_points"]
     ret_df["charge_station_points"] += df["auto_balance"] + df["tele_balance"]
 
     return ret_df
 
 
 def create_categories(df):
+    # we should also have top points, mid points, low points, cube points, cone points,
     df["timestamp"] = df["timestamp"].apply(lambda x: x.split(" ")[0])
 
     # very, very inefficient code...
@@ -138,9 +153,8 @@ def get_team_dfs(path, min_points):
     return ret, df
 
 
-def get_statistics(df, teams):
+def get_rankings(df, teams):
     stats_columns = [
-        "team_number",
         "average_total_points",
         "average_auto_points",
         "average_num_cycles",
@@ -183,40 +197,38 @@ def get_statistics(df, teams):
                     df["total_points"][df["timestamp"] == 2],
                 ).pvalue,
                 7,
-            )        
+            )
 
         defense_percentage = round(
-            len(df[df["defense"] == "Yes"]) * 100
-            / len(df["defense"]),
+            len(df[df["defense"] == "Yes"]) * 100 / len(df["defense"]),
             2,
         )
 
-        stats_df['lsrl_slope'] = slope
-        stats_df['p_value'] = p_value
-        stats_df['defense_percentage'] = defense_percentage
+        stats_df["lsrl_slope"] = slope
+        stats_df["p_value"] = p_value
+        stats_df["defense_percentage"] = defense_percentage
 
     formatted_columns = [
-        "Average Total Points",
-        "Average Auto Points",
-        "Average Number of Cycles",
-        "Average Charge Station Points",
+        "Total Points",
+        "Auto Points",
+        "# of Cycles",
+        "Balance Points",
         "LSRL Slope",
-        "Defense Percentage",
+        "Defense %",
         "P-value",
     ]
 
     rankings = pd.DataFrame()
     rankings["#"] = range(1, len(teams) + 1)
     for i, column in enumerate(stats_columns):
-        # we don't need the team # column
-        if i == 0:
-            continue
-
         temp_df = pd.DataFrame()
-        temp_df[f'Team{i}'] = teams
-        temp_df[formatted_columns[i - 1]] = stats_df[column].values
-        # temp_df[formatted_columns[i - 1]] = temp_df[formatted_columns[i - 1]].astype(int)
-        temp_df = temp_df.sort_values(by=[formatted_columns[i - 1]], ascending=(column == 'p_value'), ignore_index=True)
+        temp_df[f"Team{i}"] = teams
+        temp_df[formatted_columns[i]] = stats_df[column].values
+        temp_df = temp_df.sort_values(
+            by=[formatted_columns[i]],
+            ascending=(column == "p_value"),
+            ignore_index=True,
+        )
         rankings = pd.concat([rankings, temp_df], axis=1, sort=False)
 
     return rankings, stats_df
@@ -247,22 +259,92 @@ def process_args():
 
 def create_spreadsheet(teams, df, stats_df, rankings):
     colors = list(Color("orange").range_to(Color("grey"), len(teams)))
-    workbook = xlsxwriter.Workbook('output.xlsx')
+    workbook = xlsxwriter.Workbook("output.xlsx")
     writer = pd.ExcelWriter("output.xlsx", engine="xlsxwriter")
     stats_worksheet = workbook.add_worksheet("rankings")
 
-    print(rankings.head())
-    rankings.to_excel(writer, sheet_name="rankings", index=False, startrow=0, startcol=0)
+    rankings.to_excel(
+        writer, sheet_name="rankings", index=False, startrow=0, startcol=0
+    )
 
     cell_format = writer.book.add_format(
         {"bg_color": "#FFD580", "border": 1, "valign": "center"}
     )
 
     for i in range(2, 16, 2):
-        writer.sheets["rankings"].set_column(i, i, cell_format=cell_format, width=20)
+        writer.sheets["rankings"].set_column(i, i, cell_format=cell_format, width=12)
+
+    data_columns = [
+        "match_number",
+        "total_points",
+        "tele_points",
+        "auto_points",
+        "num_cycles",
+        "charge_station_points",
+        "high_points",
+        "mid_points",
+        "low_points",
+        "cone_points",
+        "cube_points",
+        "num_links",
+    ]
+
+    formatted_data_columns = [
+        "Match #",
+        "Total Points",
+        "Teleop Points",
+        "Auto Points",
+        "# of Cycles",
+        "Balance Points",
+        "High Points",
+        "Mid Points",
+        "Low Points",
+        "Cone Points",
+        "Cube Points",
+        "# of Links",
+    ]
+
+    stats_columns = ["lsrl_slope", "defense_percentage", "p_value"]
+
+    formatted_stats_columns = ["LSRL Slope", "Defense Percentage", "P-value"]
+
+    written_columns = ["name", "comments"]
+
+    formatted_written_columns = ["Name", "Comments"]
 
     for team in teams:
+        # data side of stuff
+        averages = df.loc[df["team_number"] == team][data_columns].mean(axis=0).round(2)
+        averages = pd.DataFrame(averages).transpose()
+        averages["match_number"] = "N/A"
 
+        left_hand_column = [""] * (len(df.loc[df["team_number"] == team]) + 1)
+        left_hand_column[-1] = "Averages:"
+
+        team_data_df = pd.concat([df[data_columns], averages], axis=0)
+        team_data_df.columns = formatted_data_columns
+        team_data_df.insert(0, "", left_hand_column, True)
+
+        worksheet = workbook.add_worksheet(str(team))
+
+        team_data_df.to_excel(
+            writer, sheet_name=str(team), index=False, startrow=0, startcol=0
+        )
+
+        for i in range(0, len(data_columns) + 1):
+            writer.sheets[str(team)].set_column(i, i, width=12)
+
+        # qualitative info stuff
+        team_written_df = df[written_columns]
+        team_written_df.columns = formatted_written_columns
+        team_written_df.to_excel(writer, sheet_name=str(team), index=False, startrow=0, startcol=len(data_columns) + 2)
+
+        # stats stuff
+        team_stats_df = stats_df[stats_columns]
+        team_stats_df.columns = formatted_stats_columns
+        team_stats_df.to_excel(writer, sheet_name=str(team), index=False, startrow=len(team_data_df)+3, startcol=0)
+
+        # TODO: add charts
 
     writer.save()
 
@@ -273,7 +355,7 @@ def main():
 
     teams, df = get_team_dfs(args.path, args.min_points)
     df.to_csv("info.csv")
-    rankings_df, stats_df = get_statistics(df, teams)
+    rankings_df, stats_df = get_rankings(df, teams)
     stats_df.to_csv("stats.csv")
 
     create_spreadsheet(teams, df, stats_df, rankings_df)

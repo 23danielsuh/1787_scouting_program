@@ -1,6 +1,27 @@
 read dataframe and process data to good format
 map every team number to the corresponding data
 
+on each of the team's pages:
+    total points ✅
+    num cycles ✅
+    auto points  ✅
+    teleop points ✅
+    balancing points ✅
+    cone points ✅
+    cube points ✅
+    high points
+    mid points
+    low points
+
+    defense percentage
+    lsrl slope
+    p-value 
+
+    bar graph with 3 bins of low mid and high for every match
+    pie chart for unbalanced, balanced, and none for auto
+    pie chart for unbalanced, balanced, and none for teleop
+    pie chart for defense
+    
 
 dataframe:
     name ✅
@@ -11,6 +32,7 @@ dataframe:
     total points ✅
     cycles ✅
     balancing information ✅
+    
     defense ✅
     additional notes ✅
 
