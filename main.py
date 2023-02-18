@@ -443,7 +443,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
             "Total Points",
             "Auto Points",
             "# of Cycles",
-            "Balance Points"
+            "Balance Points",
         ]
 
         cell_format = writer.book.add_format(
@@ -453,12 +453,10 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         worksheet1.write(len(team_data_df) + 3, 0, "Category", cell_format)
         worksheet1.write(len(team_data_df) + 3, 1, "Ranking", cell_format)
         for i in range(1, 5):
-            cur_column = 'Team' + str(i)
+            cur_column = "Team" + str(i)
             ranking = rankings.loc[rankings[cur_column] == team].index.tolist()[0] + 1
             worksheet1.write(len(team_data_df) + 3 + i, 0, rankings.columns[i * 2])
             worksheet1.write(len(team_data_df) + 3 + i, 1, ranking)
-
-        print(rankings)
 
         # chart 1: line graph of the total points
         for i, points in enumerate(
