@@ -5,7 +5,11 @@ import xlsxwriter
 from colour import Color
 import numpy as np
 
-# this is probably the worst code i've ever written in my life but if it works it works :)
+"""
+this is probably the worst code i've ever written in my life but if it works it works :)
+to anyone trying to read this code in future seasons, i am very sorry, honestly just make it from scratch instead, this thing is an absolute rushed mess 
+i'm not commenting this either because i'm lazy and there's no point in commenting 700 lines of stupidity
+"""
 
 
 def get_total_points(df):
@@ -602,32 +606,6 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
             {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
         )
 
-        writer.sheets[str(team)].conditional_format(
-            0,
-            0,
-            0,
-            15,
-            {
-                "type": "cell",
-                "criteria": ">",
-                "value": -99999999999,
-                "format": cell_format,
-            },
-        )
-
-        writer.sheets[str(team)].conditional_format(
-            len(team_data_df) + 10,
-            0,
-            len(team_data_df) + 10,
-            2,
-            {
-                "type": "cell",
-                "criteria": ">",
-                "value": -99999999999,
-                "format": cell_format,
-            },
-        )
-
         writer.sheets[str(team)].merge_range(
             len(team_data_df) + 9 + 5,
             0,
@@ -655,6 +633,22 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         # colors!
         writer.sheets[str(team)].set_tab_color(colors[color_idx].hex)
         color_idx += 1
+
+        cell_format = writer.book.add_format(
+            {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
+        )
+
+        for i in range(0, len(formatted_data_columns)):
+            worksheet1.write(0, i + 1, formatted_data_columns[i], cell_format)
+
+        worksheet1.write(0, 0, "Matches:", cell_format)
+        worksheet1.write(0, len(formatted_data_columns) + 1, "", cell_format)
+        worksheet1.write(0, len(formatted_data_columns) + 2, "Name", cell_format)
+        worksheet1.write(0, len(formatted_data_columns) + 3, "Comments", cell_format)
+
+        worksheet1.write(len(team_data_df) + 3 + 7, 0, "LSRL Slope", cell_format)
+        worksheet1.write(len(team_data_df) + 3 + 7, 1, "Defense %", cell_format)
+        worksheet1.write(len(team_data_df) + 3 + 7, 2, "P-value", cell_format)
 
     writer.save()
 
