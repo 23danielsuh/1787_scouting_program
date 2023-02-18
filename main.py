@@ -5,7 +5,7 @@ import xlsxwriter
 from colour import Color
 import numpy as np
 
-# this is probably the worst code i've ever written in my life but if it works it works
+# this is probably the worst code i've ever written in my life but if it works it works :)
 
 
 def get_total_points(df):
@@ -126,7 +126,7 @@ def create_categories(df):
     return df
 
 
-def get_team_dfs(path, min_points):
+def get_team_dfs(field_path, min_points):
     columns = [
         "timestamp",
         "name",
@@ -152,7 +152,7 @@ def get_team_dfs(path, min_points):
         "comments",
     ]
 
-    df = pd.read_csv(path)
+    df = pd.read_csv(field_path)
     df.columns = columns
 
     df = create_categories(df)
@@ -233,8 +233,6 @@ def get_rankings(df, teams):
 
         stats_df = pd.concat([stats_df, cur_df])
 
-    stats_df.to_csv("a.csv")
-
     formatted_columns = [
         "Total Points",
         "Auto Points",
@@ -275,9 +273,15 @@ def process_args():
         default=0,
     )
     parser.add_argument(
-        "--path",
+        "--field_path",
         type=str,
-        help="path to csv (probably somewhere in ~/Downloads).",
+        help="path to field scouting csv (probably somewhere in ~/Downloads).",
+        default="",
+    )
+    parser.add_argument(
+        "--pit_path",
+        type=str,
+        help="path to pit scouting csv (probably somewhere in ~/Downloads).",
         default="",
     )
 
@@ -286,7 +290,7 @@ def process_args():
     return args
 
 
-def create_spreadsheet(teams, df, stats_df, rankings):
+def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
     colors = list(Color("orange").range_to(Color("grey"), len(teams)))
     workbook = xlsxwriter.Workbook("output.xlsx")
     writer = pd.ExcelWriter("output.xlsx", engine="xlsxwriter")
@@ -297,11 +301,37 @@ def create_spreadsheet(teams, df, stats_df, rankings):
     )
 
     cell_format = writer.book.add_format(
-        {"bg_color": "#FFD580", "border": 1, "valign": "center"}
+        {"bg_color": "white", "border": 1, "valign": "center"}
+    )
+
+    format_1787 = writer.book.add_format({"bg_color": "#FFD580", "border": 1})
+
+    data_format = writer.book.add_format({"valign": "center"})
+
+    writer.sheets["rankings"].conditional_format(
+        "A1:O100",
+        {
+            "type": "cell",
+            "criteria": "==",
+            "value": 1787,
+            "format": format_1787,
+        },
     )
 
     for i in range(2, 16, 2):
-        writer.sheets["rankings"].set_column(i, i, cell_format=cell_format, width=12)
+        writer.sheets["rankings"].conditional_format(
+            1,
+            i,
+            len(teams),
+            i,
+            {
+                "type": "cell",
+                "criteria": ">",
+                "value": -99999999999,
+                "format": cell_format,
+            },
+        )
+        writer.sheets["rankings"].set_column(i, i, 15, data_format)
 
     data_columns = [
         "match_number",
@@ -341,18 +371,27 @@ def create_spreadsheet(teams, df, stats_df, rankings):
 
     formatted_written_columns = ["Name", "Comments"]
 
+    color_idx = 0
+
     for team in teams:
-        print(f"processing team {team}")
+        print(f"Processing team {team}...")
         # data side of stuff
-        averages = df.loc[df["team_number"] == team][data_columns].mean(axis=0).round(2)
+        averages = (
+            field_df.loc[field_df["team_number"] == team][data_columns]
+            .mean(axis=0)
+            .round(2)
+        )
         averages = pd.DataFrame(averages).transpose()
         averages["match_number"] = "N/A"
 
-        left_hand_column = [""] * (len(df.loc[df["team_number"] == team]) + 1)
+        left_hand_column = [""] * (
+            len(field_df.loc[field_df["team_number"] == team]) + 1
+        )
         left_hand_column[-1] = "Averages:"
 
         team_data_df = pd.concat(
-            [df.loc[df["team_number"] == team][data_columns], averages], axis=0
+            [field_df.loc[field_df["team_number"] == team][data_columns], averages],
+            axis=0,
         )
         team_data_df.columns = formatted_data_columns
         team_data_df.insert(0, "", left_hand_column, True)
@@ -367,7 +406,7 @@ def create_spreadsheet(teams, df, stats_df, rankings):
             writer.sheets[str(team)].set_column(i, i, width=12)
 
         # qualitative info stuff
-        team_written_df = df.loc[df["team_number"] == team][written_columns]
+        team_written_df = field_df.loc[field_df["team_number"] == team][written_columns]
         team_written_df.columns = formatted_written_columns
         team_written_df.to_excel(
             writer,
@@ -376,30 +415,55 @@ def create_spreadsheet(teams, df, stats_df, rankings):
             startrow=0,
             startcol=len(data_columns) + 2,
         )
-        writer.sheets[str(team)].set_column(len(data_columns) + 3, len(data_columns) + 3, width=150)
+        writer.sheets[str(team)].set_column(
+            len(data_columns) + 3, len(data_columns) + 3, width=150
+        )
 
         # stats stuff
-        team_stats_df = stats_df[stats_columns]
+        team_stats_df = stats_df.loc[stats_df["team_number"] == team][stats_columns]
         team_stats_df.columns = formatted_stats_columns
         team_stats_df.to_excel(
             writer,
             sheet_name=str(team),
             index=False,
-            startrow=len(team_data_df) + 3,
+            startrow=len(team_data_df) + 3 + 7,
             startcol=0,
         )
 
-        # TODO: add charts
         workbook1 = writer.book
         worksheet1 = writer.sheets[str(team)]
 
         worksheet1.write(7, 49, "Points")
 
-        num_data_points = len(df.loc[df["team_number"] == team])
-        cur_team = df.loc[df["team_number"] == team]
+        num_data_points = len(field_df.loc[field_df["team_number"] == team])
+        cur_team = field_df.loc[field_df["team_number"] == team]
+
+        # rankings stuff
+        ranking_columns = [
+            "Total Points",
+            "Auto Points",
+            "# of Cycles",
+            "Balance Points"
+        ]
+
+        cell_format = writer.book.add_format(
+            {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
+        )
+
+        worksheet1.write(len(team_data_df) + 3, 0, "Category", cell_format)
+        worksheet1.write(len(team_data_df) + 3, 1, "Ranking", cell_format)
+        for i in range(1, 5):
+            cur_column = 'Team' + str(i)
+            ranking = rankings.loc[rankings[cur_column] == team].index.tolist()[0] + 1
+            worksheet1.write(len(team_data_df) + 3 + i, 0, rankings.columns[i * 2])
+            worksheet1.write(len(team_data_df) + 3 + i, 1, ranking)
+
+        print(rankings)
 
         # chart 1: line graph of the total points
-        for i, points in enumerate(df.loc[df["team_number"] == team]["total_points"]):
+        for i, points in enumerate(
+            field_df.loc[field_df["team_number"] == team]["total_points"]
+        ):
             worksheet1.write(i, 50, points)
 
         chart = workbook1.add_chart({"type": "line", "subtype": "stacked"})
@@ -504,15 +568,22 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         worksheet1.write(
             0,
             60,
-            df.loc[(df["timestamp"] == 1) & (df["team_number"] == team)][
-                "total_points"
-            ].mean(),
+            field_df.loc[
+                (field_df["timestamp"] == 1) & (field_df["team_number"] == team)
+            ]["total_points"].mean(),
         )
         average_day2 = 0
-        if len(df.loc[(df["timestamp"] == 2) & (df["team_number"] == team)]) != 0:
-            average_day2 = df.loc[(df["timestamp"] == 2) & (df["team_number"] == team)][
-                "total_points"
-            ].mean()
+        if (
+            len(
+                field_df.loc[
+                    (field_df["timestamp"] == 2) & (field_df["team_number"] == team)
+                ]
+            )
+            != 0
+        ):
+            average_day2 = field_df.loc[
+                (field_df["timestamp"] == 2) & (field_df["team_number"] == team)
+            ]["total_points"].mean()
         worksheet1.write(1, 60, average_day2)
 
         chart = workbook1.add_chart({"type": "column"})
@@ -528,20 +599,109 @@ def create_spreadsheet(teams, df, stats_df, rankings):
         chart.set_title({"name": "Day 1 vs. Day 2"})
         worksheet1.insert_chart(len(team_data_df) + 3 + 16 + 16, 5 + 6, chart)
 
+        # pit scouting information
+        cell_format = writer.book.add_format(
+            {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
+        )
+
+        writer.sheets[str(team)].conditional_format(
+            0,
+            0,
+            0,
+            15,
+            {
+                "type": "cell",
+                "criteria": ">",
+                "value": -99999999999,
+                "format": cell_format,
+            },
+        )
+
+        writer.sheets[str(team)].conditional_format(
+            len(team_data_df) + 10,
+            0,
+            len(team_data_df) + 10,
+            2,
+            {
+                "type": "cell",
+                "criteria": ">",
+                "value": -99999999999,
+                "format": cell_format,
+            },
+        )
+
+        writer.sheets[str(team)].merge_range(
+            len(team_data_df) + 9 + 5,
+            0,
+            len(team_data_df) + 9 + 5,
+            2,
+            "Pit Scouting Info",
+            cell_format,
+        )
+
+        cell_format = writer.book.add_format({"border": 1, "bold": True})
+
+        pit_team_df = pit_df.loc[pit_df["Team Number"] == team]
+        row = len(team_data_df) + 9 + 6
+        for column in pit_team_df.columns:
+            if "useless" in column:
+                continue
+
+            worksheet1.write(row, 0, column, cell_format)
+            worksheet1.write(row, 1, pit_team_df[column].values[0])
+
+            row += 1
+
+        writer.sheets[str(team)].set_column(0, 0, width=17)
+
+        # colors!
+        writer.sheets[str(team)].set_tab_color(colors[color_idx].hex)
+        color_idx += 1
+
     writer.save()
+
+
+def get_pit_info(pit_csv, teams):
+    columns = [
+        "useless_timestamp",
+        "Email",
+        "Team Number",
+        "Picture",
+        "Weight",
+        "Speed",
+        "Drivetrain",
+        "Scoring Capabilities",
+        "Leave Community?",
+        "useless1",
+        "useless2",
+        "useless3",
+        "useless4",
+        "useless5",
+        "useless6",
+        "useless7",
+        "Starting Position",
+        "useless8",
+        "Scoring Method",
+        "Defense?",
+        "Other Information",
+    ]
+    df = pd.read_csv(pit_csv)
+    df.columns = columns
+    return df
 
 
 def main():
     # adds flags
     args = process_args()
 
-    teams, df = get_team_dfs(args.path, args.min_points)
+    teams, df = get_team_dfs(args.field_path, args.min_points)
     teams.sort()
-    df.to_csv("info.csv")
     rankings_df, stats_df = get_rankings(df, teams)
-    stats_df.to_csv("stats.csv")
+    pit_scouting_df = get_pit_info(args.pit_path, teams)
 
-    create_spreadsheet(teams, df, stats_df, rankings_df)
+    create_spreadsheet(teams, df, stats_df, rankings_df, pit_scouting_df)
+
+    print("Done!")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,4 @@
+,timestamp,email,team_number,picture,weight,speed,drivetrain,scoring_capabilities,leave_community,useless1,useless2,useless3,useless4,useless5,useless6,useless7,auto_start,useless8,scoring_method,defense,other_information
+0,2/18/2023 12:05:46,23dsuh@orangecsd.org,1787,Done,100,7 m/s,Swerve,"Score cones, Score cubes",Yes,2,0,0,1,0,0,Can drive and balance on station,Right,"High, Middle",Place on target,No,good robot
+1,2/18/2023 12:06:48,test@orangecsd.org,27,Done,120,10,Swerve,"Score cones, Score cubes",Yes,1,0,0,1,0,0,Can drive and balance on station,Left,"High, Middle, Low",Shoot at target,No,test
+2,2/18/2023 12:08:07,email@orangecsd.org,0,Will do right after I finish this form,90,15 m/s,Tank,"Score cones, Score cubes",Yes,0,0,0,0,0,0,Cannot drive on station,Middle,Low,Push with bumpers,Yes,"aoecirkra.u89xfa.r9ig.pnuda,oc.ria.pd"
