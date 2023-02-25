@@ -38,36 +38,40 @@ def get_total_points(df):
 
         column = df[name]
         score = 0
+        if "auto" in name:
+            score += 1
 
         if "high" in name:
-            score = 5
+            score += 5
             ret_df["high_points"] += score * column
             if "tele" in name:
                 ret_df["high_cycles"] += column
+            if "auto" in name:
+                ret_df["auto_points"] += score * column
         if "mid" in name:
-            score = 3
+            score += 3
             ret_df["mid_points"] += score * column
             if "tele" in name:
                 ret_df["mid_cycles"] += column
+            if "auto" in name:
+                ret_df["auto_points"] += score * column
         if "low" in name:
-            score = 2
+            score += 2
             ret_df["low_points"] += score * column
             if "tele" in name:
                 ret_df["low_cycles"] += column
+            if "auto" in name:
+                ret_df["auto_points"] += score * column
 
-        if "auto" in name:
-            score += 1
-            ret_df["auto_points"] += score * column
-        else:
-            ret_df["num_cycles"] += 1 * column
+        if "cone" in name:
+            ret_df["cone_points"] += score * column
 
-        if "tele" in name:
-            if "cone" in name:
-                ret_df["cone_points"] += score * column
-            if "cube" in name:
-                ret_df["cube_points"] += score * column
+        if "cube" in name:
+            ret_df["cube_points"] += score * column
 
         ret_df["total_points"] += score * column
+        if "tele" in name:
+            ret_df["num_cycles"] += column
 
     df["leave_community"] = df["leave_community"].replace({"Yes": 3, "No": 0})
     ret_df["total_points"] += df["leave_community"]
@@ -294,11 +298,11 @@ def process_args():
     return args
 
 
-def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
+def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df=''):
     colors = list(Color("orange").range_to(Color("grey"), len(teams)))
     workbook = xlsxwriter.Workbook("output.xlsx")
     writer = pd.ExcelWriter("output.xlsx", engine="xlsxwriter")
-    stats_worksheet = workbook.add_worksheet("rankings")
+    stats_worksheet = workbook.add_worksheet("Rankings")
 
     rankings.to_excel(
         writer, sheet_name="rankings", index=False, startrow=0, startcol=0
@@ -602,33 +606,34 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         worksheet1.insert_chart(len(team_data_df) + 3 + 16 + 16, 5 + 6, chart)
 
         # pit scouting information
-        cell_format = writer.book.add_format(
-            {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
-        )
+        if pit_df != '':
+            cell_format = writer.book.add_format(
+                {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
+            )
 
-        writer.sheets[str(team)].merge_range(
-            len(team_data_df) + 9 + 5,
-            0,
-            len(team_data_df) + 9 + 5,
-            2,
-            "Pit Scouting Info",
-            cell_format,
-        )
+            writer.sheets[str(team)].merge_range(
+                len(team_data_df) + 9 + 5,
+                0,
+                len(team_data_df) + 9 + 5,
+                2,
+                "Pit Scouting Info",
+                cell_format,
+            )
 
-        cell_format = writer.book.add_format({"border": 1, "bold": True})
+            cell_format = writer.book.add_format({"border": 1, "bold": True})
 
-        pit_team_df = pit_df.loc[pit_df["Team Number"] == team]
-        row = len(team_data_df) + 9 + 6
-        for column in pit_team_df.columns:
-            if "useless" in column:
-                continue
+            pit_team_df = pit_df.loc[pit_df["Team Number"] == team]
+            row = len(team_data_df) + 9 + 6
+            for column in pit_team_df.columns:
+                if "useless" in column:
+                    continue
 
-            worksheet1.write(row, 0, column, cell_format)
-            worksheet1.write(row, 1, pit_team_df[column].values[0])
+                worksheet1.write(row, 0, column, cell_format)
+                worksheet1.write(row, 1, pit_team_df[column].values[0])
 
-            row += 1
+                row += 1
 
-        writer.sheets[str(team)].set_column(0, 0, width=17)
+            writer.sheets[str(team)].set_column(0, 0, width=17)
 
         # colors!
         writer.sheets[str(team)].set_tab_color(colors[color_idx].hex)
@@ -689,11 +694,11 @@ def main():
     teams, df = get_team_dfs(args.field_path, args.min_points)
     teams.sort()
     rankings_df, stats_df = get_rankings(df, teams)
-    pit_scouting_df = get_pit_info(args.pit_path, teams)
-
-    create_spreadsheet(teams, df, stats_df, rankings_df, pit_scouting_df)
-
-    print("Done!")
+    if args.pit_path != '':
+        pit_scouting_df = get_pit_info(args.pit_path, teams)
+        create_spreadsheet(teams, df, stats_df, rankings_df, pit_scouting_df)
+    else:
+        create_spreadsheet(teams, df, stats_df, rankings_df)
 
 
 if __name__ == "__main__":
