@@ -13,6 +13,7 @@ i'm not commenting this either because i'm lazy and there's no point in commenti
 
 
 def get_total_points(df):
+    # oops this is very bad code
     aggregate_columns = [
         "total_points",
         "tele_points",
@@ -74,12 +75,14 @@ def get_total_points(df):
             ret_df["num_cycles"] += column
 
     df["leave_community"] = df["leave_community"].replace({"Yes": 3, "No": 0})
-    ret_df["total_points"] += df["leave_community"]
-    ret_df["auto_points"] += df["leave_community"]
-    ret_df["total_points"] += df["auto_balance"] + df["tele_balance"]
-    ret_df["auto_points"] += df["auto_balance"]
-    ret_df["tele_points"] = ret_df["total_points"] - ret_df["auto_points"]
-    ret_df["charge_station_points"] += df["auto_balance"] + df["tele_balance"]
+    ret_df["total_points"] += (
+        df["leave_community"] + df["auto_balance"] + df["tele_balance"]
+    )
+    ret_df["auto_points"] += df["leave_community"] + df["auto_balance"]
+    ret_df["tele_points"] = (
+        ret_df["high_cycles"] * 5 + ret_df["mid_cycles"] * 3 + ret_df["low_cycles"] * 2
+    )
+    ret_df["charge_station_points"] += df["tele_balance"]
 
     return ret_df
 
@@ -245,7 +248,7 @@ def get_rankings(df, teams):
         "Total Points",
         "Auto Points",
         "# of Cycles",
-        "Balance Points",
+        "Endgame Balance",
         "LSRL Slope",
         "Defense %",
         "P-value",
@@ -298,7 +301,7 @@ def process_args():
     return args
 
 
-def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df=''):
+def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
     colors = list(Color("orange").range_to(Color("grey"), len(teams)))
     workbook = xlsxwriter.Workbook("output.xlsx")
     writer = pd.ExcelWriter("output.xlsx", engine="xlsxwriter")
@@ -362,7 +365,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df=''):
         "Teleop Points",
         "Auto Points",
         "# of Cycles",
-        "Balance Points",
+        "Endgame Balance",
         "High Points",
         "Mid Points",
         "Low Points",
@@ -451,7 +454,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df=''):
             "Total Points",
             "Auto Points",
             "# of Cycles",
-            "Balance Points",
+            "Endgame Balance",
         ]
 
         cell_format = writer.book.add_format(
@@ -606,7 +609,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df=''):
         worksheet1.insert_chart(len(team_data_df) + 3 + 16 + 16, 5 + 6, chart)
 
         # pit scouting information
-        if pit_df != '':
+        if isinstance(pit_df, pd.DataFrame):
             cell_format = writer.book.add_format(
                 {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
             )
@@ -661,9 +664,8 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df=''):
 def get_pit_info(pit_csv, teams):
     columns = [
         "useless_timestamp",
-        "Email",
+        "Name",
         "Team Number",
-        "Picture",
         "Weight",
         "Speed",
         "Drivetrain",
@@ -694,11 +696,11 @@ def main():
     teams, df = get_team_dfs(args.field_path, args.min_points)
     teams.sort()
     rankings_df, stats_df = get_rankings(df, teams)
-    if args.pit_path != '':
+    if args.pit_path != "":
         pit_scouting_df = get_pit_info(args.pit_path, teams)
         create_spreadsheet(teams, df, stats_df, rankings_df, pit_scouting_df)
     else:
-        create_spreadsheet(teams, df, stats_df, rankings_df)
+        create_spreadsheet(teams, df, stats_df, rankings_df, None)
 
 
 if __name__ == "__main__":
