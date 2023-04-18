@@ -1,0 +1,1 @@
+python3 main.py --field_path ~/Downloads/temp_field_scouting.csv --pit_path ~/Downloads/pit_scouting.csv

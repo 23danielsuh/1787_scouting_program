@@ -12,7 +12,7 @@ i'm not commenting this either because i'm lazy and there's no point in commenti
 """
 
 
-def get_total_points(df):
+def get_info(df):
     # oops this is very bad code
     aggregate_columns = [
         "total_points",
@@ -28,6 +28,8 @@ def get_total_points(df):
         "low_cycles",
         "cone_points",
         "cube_points",
+        # "qualitative_sum",
+        "overall_rank",
     ]
     ret_df = pd.DataFrame(
         np.zeros((len(df), len(aggregate_columns))), columns=aggregate_columns
@@ -44,30 +46,30 @@ def get_total_points(df):
 
         if "high" in name:
             score += 5
-            ret_df["high_points"] += score * column
             if "tele" in name:
+                ret_df["high_points"] += score * column
                 ret_df["high_cycles"] += column
             if "auto" in name:
                 ret_df["auto_points"] += score * column
         if "mid" in name:
             score += 3
-            ret_df["mid_points"] += score * column
             if "tele" in name:
+                ret_df["mid_points"] += score * column
                 ret_df["mid_cycles"] += column
             if "auto" in name:
                 ret_df["auto_points"] += score * column
         if "low" in name:
             score += 2
-            ret_df["low_points"] += score * column
             if "tele" in name:
+                ret_df["low_points"] += score * column
                 ret_df["low_cycles"] += column
             if "auto" in name:
                 ret_df["auto_points"] += score * column
 
-        if "cone" in name:
+        if "cone" in name and "tele" in name:
             ret_df["cone_points"] += score * column
 
-        if "cube" in name:
+        if "cube" in name and "tele" in name:
             ret_df["cube_points"] += score * column
 
         ret_df["total_points"] += score * column
@@ -83,6 +85,8 @@ def get_total_points(df):
         ret_df["high_cycles"] * 5 + ret_df["mid_cycles"] * 3 + ret_df["low_cycles"] * 2
     )
     ret_df["charge_station_points"] += df["tele_balance"]
+
+    ret_df["overall_rank"] = df.filter(regex="rank").sum(axis=1)
 
     return ret_df
 
@@ -131,8 +135,9 @@ def create_categories(df):
     df["tele_balance"] = df["tele_balance"].replace(
         {"Yes, balanced": 10, "Yes, unbalanced": 6, "No": 0}
     )
+    df = df.replace({"Good": 3, "OK": 2, "Bad": 1})
 
-    df = df.join(get_total_points(df))
+    df = df.join(get_info(df))
 
     return df
 
@@ -159,12 +164,20 @@ def get_team_dfs(field_path, min_points):
         "tele_cube_low",
         "tele_balance",
         "defense",
-        "num_links",
+        "rank_auto",
+        "rank_speed",
+        "rank_pick_up",
+        "rank_placement",
+        "rank_driver",
+        "rank_balanced",
+        "rank_pick",
+        "how_break",
         "comments",
     ]
 
     df = pd.read_csv(field_path)
     df.columns = columns
+    df.replace("", "Empty field")
 
     df = create_categories(df)
     teams = df["team_number"].unique()
@@ -186,6 +199,8 @@ def get_rankings(df, teams):
         "average_auto_points",
         "average_num_cycles",
         "average_charge_station_points",
+        "average_teleop_points",
+        "qualitative_sum",
         "lsrl_slope",
         "defense_percentage",
         "p_value",
@@ -202,10 +217,17 @@ def get_rankings(df, teams):
                 "average_auto_points",
                 "average_num_cycles",
                 "average_charge_station_points",
+                "average_teleop_points",
             ]
         ] = (
             df.loc[df["team_number"] == team][
-                ["total_points", "auto_points", "num_cycles", "charge_station_points"]
+                [
+                    "total_points",
+                    "auto_points",
+                    "num_cycles",
+                    "charge_station_points",
+                    "tele_points",
+                ]
             ]
             .mean(axis=0)
             .round(2)
@@ -241,6 +263,15 @@ def get_rankings(df, teams):
         cur_df["lsrl_slope"] = [slope]
         cur_df["p_value"] = [p_value]
         cur_df["defense_percentage"] = [defense_percentage]
+        cur_df["qualitative_sum"] = [
+            round(
+                df.loc[df["team_number"] == team]
+                .filter(regex="rank_")
+                .sum(axis=1)
+                .mean(),
+                2,
+            )
+        ]
 
         stats_df = pd.concat([stats_df, cur_df])
 
@@ -249,6 +280,8 @@ def get_rankings(df, teams):
         "Auto Points",
         "# of Cycles",
         "Endgame Balance",
+        "Teleop Points",
+        "Qualitative Sum",
         "LSRL Slope",
         "Defense %",
         "P-value",
@@ -329,7 +362,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         },
     )
 
-    for i in range(2, 16, 2):
+    for i in range(2, 18, 2):
         writer.sheets["rankings"].conditional_format(
             1,
             i,
@@ -351,13 +384,21 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         "auto_points",
         "num_cycles",
         "charge_station_points",
-        "high_points",
-        "mid_points",
-        "low_points",
-        "cone_points",
-        "cube_points",
-        "num_links",
+        # "high_points",
+        # "mid_points",
+        # "low_points",
+        # "cone_points",
+        # "cube_points",
+        "overall_rank",
+        "rank_auto",
+        "rank_speed",
+        "rank_pick_up",
+        "rank_placement",
+        "rank_driver",
+        "rank_balanced",
+        "rank_pick",
     ]
+    # df.loc[df["team_number"] == team].filter(regex="rank").mean(axis=0).sum()
 
     formatted_data_columns = [
         "Match #",
@@ -366,21 +407,28 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         "Auto Points",
         "# of Cycles",
         "Endgame Balance",
-        "High Points",
-        "Mid Points",
-        "Low Points",
-        "Cone Points",
-        "Cube Points",
-        "# of Links",
+        # "High Points",
+        # "Mid Points",
+        # "Low Points",
+        # "Cone Points",
+        # "Cube Points",
+        "Combined Score",
+        "Auto Score",
+        "Speed Score",
+        "Pickup Score",
+        "Placement Score",
+        "Driver Score",
+        "Balanced Score",
+        "Pick? Score",
     ]
 
     stats_columns = ["lsrl_slope", "defense_percentage", "p_value"]
 
     formatted_stats_columns = ["LSRL Slope", "Defense %", "P-value"]
 
-    written_columns = ["name", "comments"]
+    written_columns = ["name", "comments", "how_break"]
 
-    formatted_written_columns = ["Name", "Comments"]
+    formatted_written_columns = ["Name", "Comments", "How break?"]
 
     color_idx = 0
 
@@ -445,6 +493,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         worksheet1 = writer.sheets[str(team)]
 
         worksheet1.write(7, 49, "Points")
+        worksheet1.write(49, 49, "Cycles")
 
         num_data_points = len(field_df.loc[field_df["team_number"] == team])
         cur_team = field_df.loc[field_df["team_number"] == team]
@@ -455,6 +504,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
             "Auto Points",
             "# of Cycles",
             "Endgame Balance",
+            "Qualitative Sum",
         ]
 
         cell_format = writer.book.add_format(
@@ -463,11 +513,19 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
 
         worksheet1.write(len(team_data_df) + 3, 0, "Category", cell_format)
         worksheet1.write(len(team_data_df) + 3, 1, "Ranking", cell_format)
-        for i in range(1, 5):
+        for i in range(1, 7):
+            if i == 5:
+                continue
             cur_column = "Team" + str(i)
             ranking = rankings.loc[rankings[cur_column] == team].index.tolist()[0] + 1
-            worksheet1.write(len(team_data_df) + 3 + i, 0, rankings.columns[i * 2])
-            worksheet1.write(len(team_data_df) + 3 + i, 1, ranking)
+            if i == 6:
+                worksheet1.write(
+                    len(team_data_df) + 3 + i - 1, 0, rankings.columns[i * 2]
+                )
+                worksheet1.write(len(team_data_df) + 3 + i - 1, 1, ranking)
+            else:
+                worksheet1.write(len(team_data_df) + 3 + i, 0, rankings.columns[i * 2])
+                worksheet1.write(len(team_data_df) + 3 + i, 1, ranking)
 
         # chart 1: line graph of the total points
         for i, points in enumerate(
@@ -492,22 +550,24 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         worksheet1.insert_chart(len(team_data_df) + 3, 5, chart)
 
         # chart 2: pie graph with low, mid, high
-        worksheet1.write(0, 51, "High")
-        worksheet1.write(1, 51, "Mid")
-        worksheet1.write(2, 51, "Low")
-        worksheet1.write(0, 52, cur_team["high_cycles"].sum())
-        worksheet1.write(1, 52, cur_team["mid_cycles"].sum())
-        worksheet1.write(2, 52, cur_team["low_cycles"].sum())
+        for i, points in enumerate(
+            field_df.loc[field_df["team_number"] == team]["num_cycles"]
+        ):
+            worksheet1.write(i, 80, points)
 
-        chart = workbook1.add_chart({"type": "pie"})
+        chart = workbook1.add_chart({"type": "line", "subtype": "stacked"})
         chart.add_series(
             {
-                "categories": [str(team), 0, 51, 2, 51],
-                "values": [str(team), 0, 52, 2, 52],
+                "name": [str(team), 49, 49],
+                "values": [str(team), 0, 80, num_data_points - 1, 80],
+                "line": {"color": "blue"},
             }
         )
 
-        chart.set_title({"name": "Placement of Game Pieces"})
+        chart.set_x_axis({"name": "Match #"})
+        chart.set_y_axis({"name": "Number of Cycles"})
+
+        chart.set_title({"name": "Number of Cycles"})
 
         worksheet1.insert_chart(len(team_data_df) + 3, 11, chart)
 
@@ -609,7 +669,11 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         worksheet1.insert_chart(len(team_data_df) + 3 + 16 + 16, 5 + 6, chart)
 
         # pit scouting information
-        if isinstance(pit_df, pd.DataFrame):
+        if (
+            isinstance(pit_df, pd.DataFrame)
+            and len(pit_df.loc[pit_df["Team Number"] == team]) != 0
+        ):
+
             cell_format = writer.book.add_format(
                 {"border": 1, "bold": True, "bg_color": "#FFD580", "valign": "center"}
             )
@@ -653,6 +717,7 @@ def create_spreadsheet(teams, field_df, stats_df, rankings, pit_df):
         worksheet1.write(0, len(formatted_data_columns) + 1, "", cell_format)
         worksheet1.write(0, len(formatted_data_columns) + 2, "Name", cell_format)
         worksheet1.write(0, len(formatted_data_columns) + 3, "Comments", cell_format)
+        worksheet1.write(0, len(formatted_data_columns) + 4, "How break?", cell_format)
 
         worksheet1.write(len(team_data_df) + 3 + 7, 0, "LSRL Slope", cell_format)
         worksheet1.write(len(team_data_df) + 3 + 7, 1, "Defense %", cell_format)
@@ -669,7 +734,7 @@ def get_pit_info(pit_csv, teams):
         "Weight",
         "Speed",
         "Drivetrain",
-        "Scoring Capabilities",
+        "Intake Method",
         "Leave Community?",
         "useless1",
         "useless2",
@@ -679,17 +744,23 @@ def get_pit_info(pit_csv, teams):
         "useless6",
         "useless7",
         "Starting Position",
-        "useless8",
+        "Scoring Capabilities",
         "Scoring Method",
-        "Defense?",
         "Other Information",
     ]
     df = pd.read_csv(pit_csv)
     df.columns = columns
+    df["Intake Method"] = df["Intake Method"].apply(lambda x: ",".join(x.split(" ")))
+    df["Scoring Capabilities"] = df["Scoring Capabilities"].apply(
+        lambda x: ",".join(x.split(" "))
+    )
+    # df["timestamp"] = df["timestamp"].apply(lambda x: x.split(" ")[0])
+    # df["Scoring Capabilities"] = np.fromstring(df["Scoring Capabilities"])
     return df
 
 
 def main():
+    # TODO: remove teleop pie chart and add graph for cycles
     # adds flags
     args = process_args()
 

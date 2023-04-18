@@ -1,0 +1,1 @@
+python3 main.py --field_path ~/Downloads/field_scouting.csv --pit_path ~/Downloads/pit_scouting.csv --min_points 40
